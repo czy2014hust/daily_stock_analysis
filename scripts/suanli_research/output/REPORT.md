@@ -20,11 +20,11 @@
 
 ### Top recommendations (conditional)
 
-1. **CS_Momentum_60d** — Full Sharpe 1.52 (vs EW 0.19, excess +0.19), MDD -39.6%, OOS Sharpe 1.75
-2. **Low_Vol** — Full Sharpe 1.45 (vs EW 0.13, excess +0.13), MDD -36.4%, OOS Sharpe 1.62
-3. **Dual_Momentum** — Full Sharpe 1.40 (vs EW 0.07, excess +0.07), MDD -39.1%, OOS Sharpe 1.75
-4. **Subchain_Rotation** — Full Sharpe 1.35 (vs EW 0.02, excess +0.02), MDD -38.7%, OOS Sharpe 1.70
-5. **EW_BuyHold** — Full Sharpe 1.33 (vs EW 0.00, excess +0.00), MDD -41.1%, OOS Sharpe 1.75
+1. **CS_Momentum_60d** — Full Sharpe 1.52 (excess vs EW **+0.19**), MDD -39.6%, OOS Sharpe 1.75
+2. **Low_Vol** — Full Sharpe 1.45 (excess vs EW **+0.13**), MDD -36.4%, OOS Sharpe 1.62
+3. **Dual_Momentum** — Full Sharpe 1.40 (excess vs EW **+0.07**), MDD -39.1%, OOS Sharpe 1.75
+4. **Subchain_Rotation** — Full Sharpe 1.35 (excess vs EW **+0.02**), MDD -38.7%, OOS Sharpe 1.70
+5. **EW_BuyHold** — Full Sharpe 1.33 (theme beta baseline), MDD -41.1%, OOS Sharpe 1.75
 
 ## 2. Market Analysis
 
