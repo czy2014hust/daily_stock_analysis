@@ -570,6 +570,8 @@ def write_report(scores: pd.DataFrame, results: Dict, snap: Dict) -> Path:
 
     path = OUT / "REPORT.md"
     path.write_text("\n".join(lines), encoding="utf-8")
+    scores = scores.copy()
+    scores["code"] = scores["code"].astype(str).str.zfill(6)
     scores.to_csv(OUT / "stock_scores.csv", index=False)
     pd.DataFrame({k: v["equity"] for k, v in results.items() if "equity" in v}).to_csv(OUT / "equity_curves.csv")
     (OUT / "metrics.json").write_text(
