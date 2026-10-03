@@ -7,7 +7,7 @@ Daily flow (also used by GitHub Actions):
    ``trading-strategy-research`` skill against this repository.
 2. Poll the run until it finishes (or times out).
 3. Push the final assistant result to the already-configured Feishu channel
-   via the project's ``FeishuSender`` (webhook or App Bot).
+   via lightweight webhook or App Bot.
 
 Required env:
   CURSOR_API_KEY
@@ -29,21 +29,36 @@ Feishu uses the project's existing config (FEISHU_WEBHOOK_URL or App Bot keys).
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import os
-import subprocess
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from types import SimpleNamespace
+from typing import Any, Dict, Optional
+from urllib.request import urlopen  # noqa: F401 — re-exported for tests
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+from src.services.cursor_cloud_agent import (  # noqa: E402
+    DEFAULT_API_BASE,
+    SKILL_RELATIVE_PATH,
+    TERMINAL_STATUSES,
+    build_research_prompt as _build_research_prompt,
+    create_agent_run,
+    cursor_api_request,
+    env_bool as _env_bool,
+    env_int as _env_int,
+    infer_repo_url,
+    wait_for_run,
+)
+from src.services.feishu_webhook_lite import (  # noqa: E402
+    feishu_webhook_security_fields as _feishu_webhook_security_fields,
+    send_feishu_webhook as _send_feishu_webhook_impl,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -51,219 +66,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger("trading-strategy-research-trigger")
 
-DEFAULT_API_BASE = "https://api.cursor.com"
-TERMINAL_STATUSES = frozenset({"FINISHED", "ERROR", "CANCELLED", "EXPIRED"})
-SKILL_RELATIVE_PATH = ".cursor/skills/trading-strategy-research/SKILL.md"
-
-
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = (os.getenv(name) or "").strip().lower()
-    if not raw:
-        return default
-    return raw in {"1", "true", "yes", "on"}
-
-
-def _env_int(name: str, default: int) -> int:
-    raw = (os.getenv(name) or "").strip()
-    if not raw:
-        return default
-    try:
-        return int(raw)
-    except ValueError:
-        logger.warning("Invalid %s=%r; using default %s", name, raw, default)
-        return default
-
-
-def infer_repo_url() -> str:
-    """Infer GitHub HTTPS repo URL for Cloud Agents API."""
-    explicit = (os.getenv("CURSOR_AGENT_REPO_URL") or "").strip()
-    if explicit:
-        return explicit
-
-    github_repo = (os.getenv("GITHUB_REPOSITORY") or "").strip()
-    if github_repo:
-        return f"https://github.com/{github_repo}"
-
-    try:
-        completed = subprocess.run(
-            ["git", "config", "--get", "remote.origin.url"],
-            cwd=ROOT,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        remote = (completed.stdout or "").strip()
-    except OSError:
-        remote = ""
-
-    if remote.endswith(".git"):
-        remote = remote[:-4]
-    if remote.startswith("git@github.com:"):
-        return "https://github.com/" + remote[len("git@github.com:") :]
-    if remote.startswith("ssh://git@github.com/"):
-        return "https://github.com/" + remote[len("ssh://git@github.com/") :]
-    if remote.startswith("https://github.com/"):
-        return remote
-    raise RuntimeError(
-        "Unable to infer repository URL. Set CURSOR_AGENT_REPO_URL="
-        "https://github.com/<owner>/<repo>"
-    )
-
 
 def build_research_prompt(*, extra: str = "") -> str:
-    today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
-    extra_block = (extra or "").strip()
-    extra_section = f"\n\nAdditional focus from operator:\n{extra_block}\n" if extra_block else ""
-    return f"""You are running a scheduled daily job for this repository.
-
-Follow the Cursor skill at `{SKILL_RELATIVE_PATH}` strictly
-(`/trading-strategy-research`).
-
-Task for {today} (timezone: Asia/Shanghai market context preferred when relevant):
-1. Refresh market/sector regime with the latest reliable data available in this repo's tools.
-2. Ideate, implement, and backtest 3–10 fundamentally different strategy candidates under realistic costs.
-3. Rank survivors against the quality bar in the skill (after costs, robustness, clear thesis).
-4. Write the final report using the skill's output format.
-5. Save the full Markdown report under `reports/trading_strategy_research_{today.replace('-', '')}.md`.
-6. Keep the final assistant reply as a concise Feishu-ready summary (executive summary + top 3–5 recommendations + key risks). Prefer Chinese if the repo defaults to Chinese reports.
-
-Hard constraints:
-- Do not claim edge without backtest evidence.
-- Model fees/slippage/liquidity.
-- If data is missing, document the gap instead of inventing fills.
-- Prefer committing the report file; opening a PR is optional (`autoCreatePR` may be false).
-{extra_section}
-"""
+    """Compatibility wrapper used by CLI and unit tests."""
+    return _build_research_prompt(extra=extra, source="scheduled")
 
 
-def cursor_api_request(
-    method: str,
-    path: str,
-    *,
-    api_key: str,
-    api_base: str,
-    payload: Optional[Dict[str, Any]] = None,
-    timeout: float = 60.0,
-) -> Dict[str, Any]:
-    """Call Cursor Cloud Agents API with Basic auth (api_key as username)."""
-    url = f"{api_base.rstrip('/')}{path}"
-    headers = {
-        "Accept": "application/json",
-        "User-Agent": "daily-stock-analysis-trading-strategy-research/1.0",
-    }
-    data = None
-    if payload is not None:
-        data = json.dumps(payload).encode("utf-8")
-        headers["Content-Type"] = "application/json"
-
-    # Basic auth with empty password, matching Cursor docs (`-u YOUR_API_KEY:`).
-    import base64
-
-    token = base64.b64encode(f"{api_key}:".encode("utf-8")).decode("ascii")
-    headers["Authorization"] = f"Basic {token}"
-
-    request = Request(url, data=data, headers=headers, method=method.upper())
-    try:
-        with urlopen(request, timeout=timeout) as response:
-            body = response.read().decode("utf-8")
-    except HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Cursor API {method} {path} failed: HTTP {exc.code}: {detail}") from exc
-    except URLError as exc:
-        raise RuntimeError(f"Cursor API {method} {path} network error: {exc}") from exc
-
-    if not body.strip():
-        return {}
-    try:
-        parsed = json.loads(body)
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"Cursor API returned non-JSON body: {body[:500]}") from exc
-    if not isinstance(parsed, dict):
-        raise RuntimeError(f"Cursor API returned unexpected JSON type: {type(parsed).__name__}")
-    return parsed
-
-
-def create_agent_run(
-    *,
-    api_key: str,
-    api_base: str,
-    prompt: str,
-    repo_url: str,
-    starting_ref: str,
-    model_id: str = "",
-    name: str = "",
-) -> Tuple[str, str, str]:
-    """Create a cloud agent + initial run. Returns (agent_id, run_id, agent_url)."""
-    payload: Dict[str, Any] = {
-        "prompt": {"text": prompt},
-        "repos": [
-            {
-                "url": repo_url,
-                "startingRef": starting_ref,
-            }
-        ],
-        "autoCreatePR": False,
-        "workOnCurrentBranch": False,
-    }
-    if name:
-        payload["name"] = name[:100]
-    if model_id:
-        payload["model"] = {"id": model_id}
-
-    response = cursor_api_request(
-        "POST",
-        "/v1/agents",
-        api_key=api_key,
-        api_base=api_base,
-        payload=payload,
-        timeout=120.0,
-    )
-    agent = response.get("agent") or {}
-    run = response.get("run") or {}
-    agent_id = str(agent.get("id") or "").strip()
-    run_id = str(run.get("id") or agent.get("latestRunId") or "").strip()
-    agent_url = str(agent.get("url") or "").strip()
-    if not agent_id or not run_id:
-        raise RuntimeError(f"Cursor API create response missing ids: {response}")
-    return agent_id, run_id, agent_url
-
-
-def wait_for_run(
-    *,
-    api_key: str,
-    api_base: str,
-    agent_id: str,
-    run_id: str,
-    poll_seconds: int,
-    timeout_seconds: int,
-) -> Dict[str, Any]:
-    """Poll Get A Run until terminal status or timeout."""
-    deadline = time.monotonic() + max(30, timeout_seconds)
-    last_status = ""
-    while time.monotonic() < deadline:
-        run = cursor_api_request(
-            "GET",
-            f"/v1/agents/{agent_id}/runs/{run_id}",
-            api_key=api_key,
-            api_base=api_base,
-            timeout=60.0,
-        )
-        status = str(run.get("status") or "").upper()
-        if status != last_status:
-            logger.info("Cursor run %s status=%s", run_id, status or "?")
-            last_status = status
-        if status in TERMINAL_STATUSES:
-            return run
-        time.sleep(max(5, poll_seconds))
-    raise TimeoutError(
-        f"Cursor run {run_id} did not finish within {timeout_seconds}s (last={last_status or 'unknown'})"
-    )
+def _send_feishu_webhook(content: str) -> bool:
+    """Compatibility wrapper; implementation lives in feishu_webhook_lite."""
+    return _send_feishu_webhook_impl(content)
 
 
 def _feishu_config_from_env() -> Any:
     """Build a minimal config object for FeishuSender without full Config bootstrap."""
-    from types import SimpleNamespace
-
     from dotenv import load_dotenv
 
     load_dotenv(ROOT / ".env", override=False)
@@ -295,110 +110,10 @@ def _feishu_config_from_env() -> Any:
     )
 
 
-def _feishu_webhook_security_fields(secret: str) -> Dict[str, Any]:
-    """Build Feishu webhook signature fields when a secret is configured."""
-    secret = (secret or "").strip()
-    if not secret:
-        return {}
-    import hashlib
-    import hmac
-    import base64
-
-    timestamp = str(int(time.time()))
-    string_to_sign = f"{timestamp}\n{secret}"
-    digest = hmac.new(string_to_sign.encode("utf-8"), digestmod=hashlib.sha256).digest()
-    return {"timestamp": timestamp, "sign": base64.b64encode(digest).decode("utf-8")}
-
-
-def _send_feishu_webhook(content: str) -> bool:
-    """Lightweight webhook sender (stdlib + optional requests) for Actions/minimal deps."""
-    from dotenv import load_dotenv
-
-    load_dotenv(ROOT / ".env", override=False)
-    webhook_url = (os.getenv("FEISHU_WEBHOOK_URL") or "").strip()
-    if not webhook_url:
-        return False
-
-    keyword = (os.getenv("FEISHU_WEBHOOK_KEYWORD") or "").strip()
-    body = content.strip()
-    if keyword and keyword not in body:
-        body = f"{keyword}\n\n{body}"
-
-    security = _feishu_webhook_security_fields(os.getenv("FEISHU_WEBHOOK_SECRET") or "")
-    card_payload: Dict[str, Any] = {
-        "msg_type": "interactive",
-        "card": {
-            "config": {"wide_screen_mode": True},
-            "header": {
-                "title": {"tag": "plain_text", "content": "交易策略研究日报"},
-            },
-            "elements": [
-                {
-                    "tag": "div",
-                    "text": {"tag": "lark_md", "content": body},
-                }
-            ],
-        },
-    }
-    card_payload.update(security)
-    text_payload: Dict[str, Any] = {
-        "msg_type": "text",
-        "content": {"text": body},
-    }
-    text_payload.update(security)
-
-    def _post(payload: Dict[str, Any]) -> Tuple[bool, str]:
-        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        request = Request(
-            webhook_url,
-            data=data,
-            headers={
-                "Content-Type": "application/json",
-                "User-Agent": "daily-stock-analysis-trading-strategy-research/1.0",
-            },
-            method="POST",
-        )
-        try:
-            with urlopen(request, timeout=30) as response:
-                raw = response.read().decode("utf-8", errors="replace")
-        except HTTPError as exc:
-            detail = exc.read().decode("utf-8", errors="replace")
-            return False, f"HTTP {exc.code}: {detail[:300]}"
-        except URLError as exc:
-            return False, f"network error: {exc}"
-        try:
-            result = json.loads(raw) if raw.strip() else {}
-        except json.JSONDecodeError:
-            return False, f"non-JSON response: {raw[:200]}"
-        if not isinstance(result, dict):
-            return False, f"unexpected response: {raw[:200]}"
-        code = result.get("StatusCode", result.get("code", 0))
-        if code in (0, "0"):
-            return True, "ok"
-        return False, str(result)[:300]
-
-    ok, detail = _post(card_payload)
-    if ok:
-        logger.info("Feishu webhook card delivery succeeded")
-        return True
-    logger.warning("Feishu webhook card failed (%s); trying text fallback", detail)
-    ok, detail = _post(text_payload)
-    if ok:
-        logger.info("Feishu webhook text delivery succeeded")
-        return True
-    logger.error("Feishu webhook delivery failed: %s", detail)
-    return False
-
-
 def send_feishu_report(content: str) -> bool:
-    """Send report text through the project's configured Feishu channel.
-
-    Prefer a dependency-light webhook path (suitable for GitHub Actions with
-    minimal pip installs). Fall back to FeishuSender for App Bot mode.
-    """
+    """Send report text through the project's configured Feishu channel."""
     webhook_url = (os.getenv("FEISHU_WEBHOOK_URL") or "").strip()
     if not webhook_url:
-        # dotenv may not have been loaded yet when only App Bot is configured
         from dotenv import load_dotenv
 
         load_dotenv(ROOT / ".env", override=False)

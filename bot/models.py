@@ -85,6 +85,8 @@ class BotMessage:
                 '批量': 'batch',
                 '帮助': 'help',
                 '状态': 'status',
+                '策略研究': 'strategy_research',
+                '交易策略研究': 'strategy_research',
             }
             for cn_cmd, en_cmd in chinese_commands.items():
                 if text.startswith(cn_cmd):
