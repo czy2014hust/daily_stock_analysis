@@ -295,19 +295,136 @@ def _feishu_config_from_env() -> Any:
     )
 
 
+def _feishu_webhook_security_fields(secret: str) -> Dict[str, Any]:
+    """Build Feishu webhook signature fields when a secret is configured."""
+    secret = (secret or "").strip()
+    if not secret:
+        return {}
+    import hashlib
+    import hmac
+    import base64
+
+    timestamp = str(int(time.time()))
+    string_to_sign = f"{timestamp}\n{secret}"
+    digest = hmac.new(string_to_sign.encode("utf-8"), digestmod=hashlib.sha256).digest()
+    return {"timestamp": timestamp, "sign": base64.b64encode(digest).decode("utf-8")}
+
+
+def _send_feishu_webhook(content: str) -> bool:
+    """Lightweight webhook sender (stdlib + optional requests) for Actions/minimal deps."""
+    from dotenv import load_dotenv
+
+    load_dotenv(ROOT / ".env", override=False)
+    webhook_url = (os.getenv("FEISHU_WEBHOOK_URL") or "").strip()
+    if not webhook_url:
+        return False
+
+    keyword = (os.getenv("FEISHU_WEBHOOK_KEYWORD") or "").strip()
+    body = content.strip()
+    if keyword and keyword not in body:
+        body = f"{keyword}\n\n{body}"
+
+    security = _feishu_webhook_security_fields(os.getenv("FEISHU_WEBHOOK_SECRET") or "")
+    card_payload: Dict[str, Any] = {
+        "msg_type": "interactive",
+        "card": {
+            "config": {"wide_screen_mode": True},
+            "header": {
+                "title": {"tag": "plain_text", "content": "交易策略研究日报"},
+            },
+            "elements": [
+                {
+                    "tag": "div",
+                    "text": {"tag": "lark_md", "content": body},
+                }
+            ],
+        },
+    }
+    card_payload.update(security)
+    text_payload: Dict[str, Any] = {
+        "msg_type": "text",
+        "content": {"text": body},
+    }
+    text_payload.update(security)
+
+    def _post(payload: Dict[str, Any]) -> Tuple[bool, str]:
+        data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        request = Request(
+            webhook_url,
+            data=data,
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "daily-stock-analysis-trading-strategy-research/1.0",
+            },
+            method="POST",
+        )
+        try:
+            with urlopen(request, timeout=30) as response:
+                raw = response.read().decode("utf-8", errors="replace")
+        except HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            return False, f"HTTP {exc.code}: {detail[:300]}"
+        except URLError as exc:
+            return False, f"network error: {exc}"
+        try:
+            result = json.loads(raw) if raw.strip() else {}
+        except json.JSONDecodeError:
+            return False, f"non-JSON response: {raw[:200]}"
+        if not isinstance(result, dict):
+            return False, f"unexpected response: {raw[:200]}"
+        code = result.get("StatusCode", result.get("code", 0))
+        if code in (0, "0"):
+            return True, "ok"
+        return False, str(result)[:300]
+
+    ok, detail = _post(card_payload)
+    if ok:
+        logger.info("Feishu webhook card delivery succeeded")
+        return True
+    logger.warning("Feishu webhook card failed (%s); trying text fallback", detail)
+    ok, detail = _post(text_payload)
+    if ok:
+        logger.info("Feishu webhook text delivery succeeded")
+        return True
+    logger.error("Feishu webhook delivery failed: %s", detail)
+    return False
+
+
 def send_feishu_report(content: str) -> bool:
-    """Send report text through the project's configured Feishu channel."""
-    from src.notification_sender.feishu_sender import FeishuSender
+    """Send report text through the project's configured Feishu channel.
+
+    Prefer a dependency-light webhook path (suitable for GitHub Actions with
+    minimal pip installs). Fall back to FeishuSender for App Bot mode.
+    """
+    webhook_url = (os.getenv("FEISHU_WEBHOOK_URL") or "").strip()
+    if not webhook_url:
+        # dotenv may not have been loaded yet when only App Bot is configured
+        from dotenv import load_dotenv
+
+        load_dotenv(ROOT / ".env", override=False)
+        webhook_url = (os.getenv("FEISHU_WEBHOOK_URL") or "").strip()
+
+    if webhook_url:
+        return _send_feishu_webhook(content)
+
+    try:
+        from src.notification_sender.feishu_sender import FeishuSender
+    except Exception as exc:  # pragma: no cover - import graph varies by env
+        logger.error(
+            "Feishu App Bot path unavailable (%s). Set FEISHU_WEBHOOK_URL or "
+            "install full project dependencies for App Bot.",
+            exc,
+        )
+        return False
 
     config = _feishu_config_from_env()
     sender = FeishuSender(config)
-    has_webhook = bool(getattr(sender, "_feishu_url", None))
     has_app_bot = bool(
         getattr(sender, "_feishu_app_id", None)
         and getattr(sender, "_feishu_app_secret", None)
         and getattr(sender, "_feishu_chat_id", None)
     )
-    if not has_webhook and not has_app_bot:
+    if not has_app_bot:
         logger.error(
             "Feishu is not configured. Set FEISHU_WEBHOOK_URL or "
             "FEISHU_APP_ID + FEISHU_APP_SECRET + FEISHU_CHAT_ID."
@@ -320,9 +437,9 @@ def send_feishu_report(content: str) -> bool:
         body = f"{keyword}\n\n{body}"
     ok = sender.send_to_feishu(body)
     if ok:
-        logger.info("Feishu delivery succeeded")
+        logger.info("Feishu App Bot delivery succeeded")
     else:
-        logger.error("Feishu delivery failed")
+        logger.error("Feishu App Bot delivery failed")
     return ok
 
 
