@@ -258,6 +258,7 @@ def test_unknown_generation_backend_raises_structured_config_error() -> None:
     assert error.details["supported_backends"] == [
         "claude_code_cli",
         "codex_cli",
+        "cursor_cli",
         "litellm",
         "opencode_cli",
     ]
@@ -281,6 +282,13 @@ def test_opencode_cli_is_supported_generation_backend() -> None:
     config = _config(generation_backend="opencode_cli", generation_fallback_backend="litellm")
 
     assert resolve_generation_backend_id(config) == "opencode_cli"
+    assert resolve_generation_fallback_backend_id(config) == "litellm"
+
+
+def test_cursor_cli_is_supported_generation_backend() -> None:
+    config = _config(generation_backend="cursor_cli", generation_fallback_backend="litellm")
+
+    assert resolve_generation_backend_id(config) == "cursor_cli"
     assert resolve_generation_fallback_backend_id(config) == "litellm"
 
 
@@ -314,6 +322,7 @@ def test_unknown_agent_backend_raises_structured_config_error() -> None:
         "auto",
         "claude_code_cli",
         "codex_cli",
+        "cursor_cli",
         "litellm",
         "opencode_cli",
     ]

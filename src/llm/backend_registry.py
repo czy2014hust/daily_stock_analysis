@@ -12,12 +12,14 @@ LITELLM_BACKEND_ID = "litellm"
 CODEX_CLI_BACKEND_ID = "codex_cli"
 CLAUDE_CODE_CLI_BACKEND_ID = "claude_code_cli"
 OPENCODE_CLI_BACKEND_ID = "opencode_cli"
+CURSOR_CLI_BACKEND_ID = "cursor_cli"
 AUTO_AGENT_BACKEND_ID = "auto"
 
 LOCAL_CLI_GENERATION_BACKEND_IDS = frozenset({
     CODEX_CLI_BACKEND_ID,
     CLAUDE_CODE_CLI_BACKEND_ID,
     OPENCODE_CLI_BACKEND_ID,
+    CURSOR_CLI_BACKEND_ID,
 })
 AGENT_CAPABLE_BACKEND_IDS = frozenset({LITELLM_BACKEND_ID})
 # Phase 4 local CLI backends are generation-only today. Keep this derived so a

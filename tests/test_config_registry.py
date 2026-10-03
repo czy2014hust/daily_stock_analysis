@@ -217,12 +217,21 @@ class TestGenerationBackendFieldsRegistered(unittest.TestCase):
             if key == "GENERATION_BACKEND":
                 self.assertEqual(
                     field["validation"],
-                    {"enum": ["litellm", "codex_cli", "claude_code_cli", "opencode_cli"]},
+                    {
+                        "enum": [
+                            "litellm",
+                            "codex_cli",
+                            "claude_code_cli",
+                            "opencode_cli",
+                            "cursor_cli",
+                        ]
+                    },
                 )
                 self.assertIn({"label": "Default model settings", "value": "litellm"}, field["options"])
                 self.assertIn({"label": "Codex CLI (experimental)", "value": "codex_cli"}, field["options"])
                 self.assertIn({"label": "Claude Code CLI (experimental)", "value": "claude_code_cli"}, field["options"])
                 self.assertIn({"label": "OpenCode CLI (experimental)", "value": "opencode_cli"}, field["options"])
+                self.assertIn({"label": "Cursor CLI (experimental)", "value": "cursor_cli"}, field["options"])
             else:
                 self.assertEqual(field["validation"], {"enum": ["", "litellm"]})
                 self.assertIn({"label": "Disabled", "value": ""}, field["options"])

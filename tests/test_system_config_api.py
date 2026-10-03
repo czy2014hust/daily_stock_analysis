@@ -168,6 +168,7 @@ class SystemConfigApiTestCase(unittest.TestCase):
         self.assertNotIn("codex_cli", {option["value"] for option in agent_schema["options"]})
         self.assertNotIn("claude_code_cli", {option["value"] for option in agent_schema["options"]})
         self.assertNotIn("opencode_cli", {option["value"] for option in agent_schema["options"]})
+        self.assertNotIn("cursor_cli", {option["value"] for option in agent_schema["options"]})
         backend_schema = item_map["AGENT_BACKEND"]["schema"]
         self.assertEqual(
             backend_schema["validation"]["enum"],
@@ -176,6 +177,7 @@ class SystemConfigApiTestCase(unittest.TestCase):
         generation_schema = item_map["GENERATION_BACKEND"]["schema"]
         self.assertIn("claude_code_cli", generation_schema["validation"]["enum"])
         self.assertIn("opencode_cli", generation_schema["validation"]["enum"])
+        self.assertIn("cursor_cli", generation_schema["validation"]["enum"])
 
     def test_get_config_schema_includes_notification_noise_fields(self) -> None:
         payload = system_config.get_system_config(include_schema=True, service=self.service).model_dump(by_alias=True)

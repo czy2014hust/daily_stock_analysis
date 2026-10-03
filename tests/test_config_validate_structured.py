@@ -216,11 +216,27 @@ class TestValidateStructuredLLM:
         assert error.severity == "error"
         assert "claude_code_cli" in error.message
         assert "codex_cli" in error.message
+        assert "cursor_cli" in error.message
         assert "codex" in error.message
 
     def test_opencode_cli_generation_backend_accepts_default_opencode_model(self):
         cfg = _make_config(
             generation_backend="opencode_cli",
+            llm_model_list=[],
+            litellm_model="",
+            gemini_api_keys=[],
+            anthropic_api_keys=[],
+            openai_api_keys=[],
+            deepseek_api_keys=[],
+        )
+
+        issues = cfg.validate_structured()
+
+        assert not [i for i in issues if i.severity == "error"]
+
+    def test_cursor_cli_generation_backend_accepts_default_cursor_model(self):
+        cfg = _make_config(
+            generation_backend="cursor_cli",
             llm_model_list=[],
             litellm_model="",
             gemini_api_keys=[],
@@ -249,6 +265,22 @@ class TestValidateStructuredLLM:
 
         assert not [i for i in issues if i.severity == "error"]
 
+    def test_cursor_cli_generation_backend_accepts_safe_model_without_litellm_keys(self):
+        cfg = _make_config(
+            generation_backend="cursor_cli",
+            cursor_cli_model="sonnet-4-thinking",
+            llm_model_list=[],
+            litellm_model="",
+            gemini_api_keys=[],
+            anthropic_api_keys=[],
+            openai_api_keys=[],
+            deepseek_api_keys=[],
+        )
+
+        issues = cfg.validate_structured()
+
+        assert not [i for i in issues if i.severity == "error"]
+
     def test_opencode_cli_generation_backend_rejects_unsafe_model_token(self):
         for model in ("deepseek/model;rm", "provider/$MODEL"):
             cfg = _make_config(
@@ -259,6 +291,18 @@ class TestValidateStructuredLLM:
             issues = cfg.validate_structured()
 
             error = next(i for i in issues if i.field == "OPENCODE_CLI_MODEL")
+            assert error.severity == "error"
+
+    def test_cursor_cli_generation_backend_rejects_unsafe_model_token(self):
+        for model in ("sonnet;rm", "model/$NAME"):
+            cfg = _make_config(
+                generation_backend="cursor_cli",
+                cursor_cli_model=model,
+            )
+
+            issues = cfg.validate_structured()
+
+            error = next(i for i in issues if i.field == "CURSOR_CLI_MODEL")
             assert error.severity == "error"
 
     def test_unknown_generation_fallback_backend_is_structured_config_error(self):
@@ -287,6 +331,7 @@ class TestValidateStructuredLLM:
         cfg = _make_config(
             generation_backend=generation_backend,
             opencode_cli_model="provider/model" if generation_backend == "opencode_cli" else "",
+            cursor_cli_model="sonnet-4-thinking" if generation_backend == "cursor_cli" else "",
             litellm_model="",
             llm_model_list=[],
             gemini_api_keys=[],

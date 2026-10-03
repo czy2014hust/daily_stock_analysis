@@ -131,8 +131,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
             {"label": "Codex CLI (experimental)", "value": "codex_cli"},
             {"label": "Claude Code CLI (experimental)", "value": "claude_code_cli"},
             {"label": "OpenCode CLI (experimental)", "value": "opencode_cli"},
+            {"label": "Cursor CLI (experimental)", "value": "cursor_cli"},
         ],
-        "validation": {"enum": ["litellm", "codex_cli", "claude_code_cli", "opencode_cli"]},
+        "validation": {
+            "enum": ["litellm", "codex_cli", "claude_code_cli", "opencode_cli", "cursor_cli"]
+        },
         "display_order": 0,
         "help_key": "settings.ai_model.GENERATION_BACKEND",
         "examples": [
@@ -140,6 +143,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
             "GENERATION_BACKEND=codex_cli",
             "GENERATION_BACKEND=claude_code_cli",
             "GENERATION_BACKEND=opencode_cli",
+            "GENERATION_BACKEND=cursor_cli",
         ],
         "docs": [
             {
@@ -171,6 +175,40 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
             {
                 "label": "LLM 配置指南",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
+            },
+        ],
+        "warning_codes": [],
+    },
+    "CURSOR_CLI_MODEL": {
+        "title": "Cursor CLI Model",
+        "description": (
+            "Optional model override passed to Cursor Agent CLI when GENERATION_BACKEND=cursor_cli. "
+            "Leave empty to use the local Cursor CLI default model."
+        ),
+        "category": "ai_model",
+        "data_type": "string",
+        "ui_control": "text",
+        "is_sensitive": False,
+        "is_required": False,
+        "is_editable": True,
+        "default_value": "",
+        "placeholder": "optional model id, e.g. sonnet-4-thinking",
+        "validation": {"pattern": r"^$|^[^\s|<>;`$]+$"},
+        "display_order": 2,
+        "help_key": "settings.ai_model.CURSOR_CLI_MODEL",
+        "examples": [
+            "CURSOR_CLI_MODEL=sonnet-4-thinking",
+            "CURSOR_CLI_MODEL=gpt-5",
+            "CURSOR_CLI_MODEL=claude-opus-4-8[context=1m,effort=high,fast=false]",
+        ],
+        "docs": [
+            {
+                "label": "LLM 配置指南",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
+            },
+            {
+                "label": "Cursor CLI headless",
+                "href": "https://cursor.com/docs/cli/headless",
             },
         ],
         "warning_codes": [],
