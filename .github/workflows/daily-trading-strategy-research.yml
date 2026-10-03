@@ -6,6 +6,11 @@ on:
     - cron: '0 1 * * *'
   workflow_dispatch:
     inputs:
+      feishu_test_only:
+        description: '仅测试飞书连通性（不调用 Cursor API）'
+        required: false
+        default: false
+        type: boolean
       skip_feishu:
         description: '跳过飞书推送（仅触发 Cursor Agent）'
         required: false
@@ -41,6 +46,7 @@ jobs:
           pip install python-dotenv requests lark-oapi
 
       - name: Require CURSOR_API_KEY
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.feishu_test_only != 'true' }}
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
         run: |
@@ -61,6 +67,7 @@ jobs:
           CURSOR_AGENT_TIMEOUT_SECONDS: ${{ vars.CURSOR_AGENT_TIMEOUT_SECONDS || '3300' }}
           TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA: ${{ github.event.inputs.extra_prompt || vars.TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA || '' }}
           SKIP_FEISHU: ${{ github.event.inputs.skip_feishu == 'true' && 'true' || 'false' }}
+          FEISHU_TEST_ONLY: ${{ github.event.inputs.feishu_test_only == 'true' && 'true' || 'false' }}
           # Reuse the same Feishu secrets as 每日股票分析
           FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           FEISHU_WEBHOOK_SECRET: ${{ secrets.FEISHU_WEBHOOK_SECRET }}
@@ -75,9 +82,14 @@ jobs:
         run: |
           set -euo pipefail
           echo "Repo: $CURSOR_AGENT_REPO_URL @ $CURSOR_AGENT_STARTING_REF"
+          echo "Feishu test only: ${FEISHU_TEST_ONLY:-false}"
           echo "Feishu webhook: $([ -n "${FEISHU_WEBHOOK_URL:-}" ] && echo configured || echo missing)"
           echo "Feishu app bot: $([ -n "${FEISHU_APP_ID:-}" ] && [ -n "${FEISHU_APP_SECRET:-}" ] && [ -n "${FEISHU_CHAT_ID:-}" ] && echo configured || echo missing)"
-          python scripts/trigger_trading_strategy_research.py
+          if [ "${FEISHU_TEST_ONLY:-false}" = "true" ]; then
+            python scripts/trigger_trading_strategy_research.py --feishu-test
+          else
+            python scripts/trigger_trading_strategy_research.py
+          fi
 
       - name: Upload summary artifact
         if: always()

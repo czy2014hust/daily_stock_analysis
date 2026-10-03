@@ -133,6 +133,20 @@ def test_run_dry_run_prompt_exits_zero(capsys: pytest.CaptureFixture[str]) -> No
     assert "trading-strategy-research" in out
 
 
+def test_run_feishu_test_sends_message(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent: dict = {}
+
+    def fake_send(content: str) -> bool:
+        sent["content"] = content
+        return True
+
+    monkeypatch.setattr(mod, "send_feishu_report", fake_send)
+    code = mod.run(["--feishu-test"])
+    assert code == 0
+    assert "连通性测试" in sent["content"]
+    assert "FEISHU_TEST" in sent["content"]
+
+
 def test_run_end_to_end_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("CURSOR_API_KEY", "test-key")
     monkeypatch.setenv("CURSOR_AGENT_REPO_URL", "https://github.com/acme/demo")

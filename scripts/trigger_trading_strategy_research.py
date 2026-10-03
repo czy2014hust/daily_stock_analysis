@@ -354,6 +354,11 @@ def run(argv: Optional[list[str]] = None) -> int:
         help="Print the agent prompt and exit without calling Cursor API",
     )
     parser.add_argument(
+        "--feishu-test",
+        action="store_true",
+        help="Send a Feishu connectivity test message and exit (no Cursor API)",
+    )
+    parser.add_argument(
         "--skip-feishu",
         action="store_true",
         help="Do not send Feishu notification after the run",
@@ -370,6 +375,21 @@ def run(argv: Optional[list[str]] = None) -> int:
     if args.dry_run_prompt:
         print(prompt)
         return 0
+
+    if args.feishu_test or _env_bool("FEISHU_TEST_ONLY", False):
+        report_date = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+        message = format_feishu_message(
+            result_text=(
+                "这是一条连通性测试消息（未调用 Cursor API）。\n"
+                "若你能看到本条，说明飞书推送配置可用；"
+                "每日 09:00 的 trading-strategy-research 将使用同一通道推送摘要。"
+            ),
+            agent_url="",
+            run_status="FEISHU_TEST",
+            report_date=report_date,
+        )
+        logger.info("Sending Feishu connectivity test message")
+        return 0 if send_feishu_report(message) else 1
 
     api_key = (os.getenv("CURSOR_API_KEY") or "").strip()
     if not api_key:
