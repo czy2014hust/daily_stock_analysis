@@ -1,5 +1,8 @@
 # 飞书 → Cursor 策略研究桥接（无服务器）
 
+> 若飞书保存请求 URL 出现「3 秒超时」，不要用本 Worker。改用  
+> [飞书自动化直接调 GitHub API](../../docs/bot/feishu-github-dispatch.md)。
+
 不需要自建 VPS / `python main.py`。用 **Cloudflare Worker（免费）** 收飞书 text，触发 **GitHub Actions** 调用 Cursor skill，结论经已有 **飞书群 Webhook** 推回。
 
 ```text

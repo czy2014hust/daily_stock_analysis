@@ -303,14 +303,36 @@ https://open.feishu.cn/document/develop-an-echo-bot/introduction
 
 | 方案 | 是否需要自建服务器 | 推荐场景 |
 | --- | --- | --- |
-| **A. Cloudflare Worker + GitHub Actions（推荐无服务器）** | 否 | 没有 VPS / 不想常驻进程 |
-| B. 本机/服务器 Stream 长连接 | 是（需常驻 `main.py`） | 已有 Docker/云主机 |
+| **A. 飞书自动化 → GitHub API（推荐无服务器）** | 否 | 没有 VPS；飞书访问 workers.dev 超时 |
+| B. Cloudflare Worker + GitHub Actions | 否 | 已有可被飞书访问的公网 URL |
+| C. 本机/服务器 Stream 长连接 | 是（需常驻 `main.py`） | 已有 Docker/云主机 |
 
-研究任务往往要跑很久，**不能**指望单个 HTTP 云函数同步跑完 Cursor；必须「立刻 ACK + 后台 Actions」。
+研究任务往往要跑很久，**不能**指望单个 HTTP 请求同步跑完 Cursor；必须「飞书触发 Actions + 后台跑 Cursor」。
 
 ---
 
-### 方案 A：无服务器（Cloudflare Worker 桥接）
+### 方案 A：飞书自动化直接调 GitHub API（推荐）
+
+```text
+飞书多维表格/工作流 HTTP
+        → POST api.github.com/.../dispatches
+        → Actions 调 Cursor skill
+        → FEISHU_WEBHOOK_URL 推结论到群
+```
+
+完整步骤、请求头、Body 模板见：[飞书自动化触发 GitHub](feishu-github-dispatch.md)
+
+**你需要配置：**
+
+1. GitHub Secrets：`CURSOR_API_KEY`、`FEISHU_WEBHOOK_URL`
+2. GitHub PAT（填进飞书 HTTP 请求的 `Authorization`）
+3. 飞书多维表格字段「研究焦点」+ 自动化「发送 HTTP 请求」
+
+群自定义机器人只负责**收结论**，不能收你的 text。
+
+---
+
+### 方案 B：无服务器（Cloudflare Worker 桥接）
 
 ```text
 飞书 text → Cloudflare Worker（秒回 ACK）
@@ -340,7 +362,7 @@ https://open.feishu.cn/document/develop-an-echo-bot/introduction
 
 ---
 
-### 方案 B：有服务器时用 Stream 长连接
+### 方案 C：有服务器时用 Stream 长连接
 
 流程：
 1. 飞书 Stream Bot 收到 text  

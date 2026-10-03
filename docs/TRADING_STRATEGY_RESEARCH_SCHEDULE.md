@@ -53,13 +53,18 @@ Workflow 文件：`.github/workflows/daily-trading-strategy-research.yml`
 
 ## 飞书触发（收 text → 研究 → 回飞书）
 
-### 无服务器（推荐）：Cloudflare Worker → GitHub Actions
+### 无服务器（推荐）：飞书自动化 → GitHub API
 
-不需要自建 VPS。飞书事件 HTTP 打到 Worker，Worker 触发 `repository_dispatch`，Actions 跑 Cursor skill，结论走 `FEISHU_WEBHOOK_URL`。
+飞书多维表格/工作流「发送 HTTP 请求」直接 `POST` GitHub `repository_dispatch`，Actions 跑 Cursor skill，结论走 `FEISHU_WEBHOOK_URL`。
 
-- 代码：`deploy/feishu-cursor-bridge/`
-- 说明：[桥接 README](../deploy/feishu-cursor-bridge/README.md)
-- 配置摘要见 [飞书 Bot 配置 · 方案 A](bot/feishu-bot-config.md#方案-a无服务器cloudflare-worker-桥接)
+- 说明：[飞书自动化触发 GitHub](bot/feishu-github-dispatch.md)
+- 请求示例：`deploy/feishu-github-dispatch/`
+
+不需要 Cloudflare，也不需要自建服务器。
+
+### 备选：Cloudflare Worker → GitHub Actions
+
+若已有可被飞书访问的 HTTPS 地址，可用 `deploy/feishu-cursor-bridge/`。国内飞书校验 `*.workers.dev` 常 3 秒超时，优先用方案「飞书自动化 → GitHub API」。
 
 ### 有服务器：Stream Bot 进程
 

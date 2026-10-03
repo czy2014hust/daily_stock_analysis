@@ -1,0 +1,6 @@
+{
+  "event_type": "feishu-strategy-research",
+  "client_payload": {
+    "text": "{{研究焦点}}"
+  }
+}

@@ -4,7 +4,7 @@ on:
   # 每天北京时间 09:00（UTC 01:00）
   schedule:
     - cron: '0 1 * * *'
-  # 无服务器：飞书 Cloudflare Worker 桥接 → repository_dispatch
+  # 无服务器：飞书自动化 / Cloudflare Worker → repository_dispatch
   repository_dispatch:
     types: [feishu-strategy-research]
   workflow_dispatch:
@@ -68,6 +68,12 @@ jobs:
             FOCUS="$VAR_EXTRA"
             echo "Source: schedule/vars"
           fi
+          # Strip common Feishu command prefixes so users can paste "/策略研究 ..."
+          case "$FOCUS" in
+            /策略研究*|策略研究*|交易策略研究*|/tsr*|/TSR*|/trading-strategy-research*)
+              FOCUS="$(printf '%s' "$FOCUS" | sed -E 's#^(/?策略研究|/交易策略研究|交易策略研究|/tsr|/TSR|/trading-strategy-research)[[:space:]]*##')"
+              ;;
+          esac
           {
             echo "text<<EOF"
             printf '%s\n' "$FOCUS"
