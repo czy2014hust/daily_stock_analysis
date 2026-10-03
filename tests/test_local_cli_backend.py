@@ -25,6 +25,7 @@ from src.llm.generation_backend import GenerationError, GenerationErrorCode  # n
 from src.llm.local_cli_backend import (  # noqa: E402
     CLAUDE_CODE_CLI_PRESET,
     CODEX_CLI_PRESET,
+    CURSOR_CLI_PRESET,
     LocalCliGenerationBackend,
     LocalCliExecutionResult,
     LocalCliExtractionError,
@@ -618,6 +619,115 @@ print("should not execute")
 
     assert exc_info.value.error_code is GenerationErrorCode.UNSAFE_CONFIG
     assert exc_info.value.details["reason"] == "unsafe_opencode_cli_model"
+
+
+def test_cursor_cli_reads_prompt_from_stdin_and_returns_text(tmp_path: Path) -> None:
+    argv_path = tmp_path / "argv.json"
+    stdin_path = tmp_path / "stdin.txt"
+    script = _script(
+        tmp_path,
+        f"""
+import json, pathlib, sys
+pathlib.Path({str(argv_path)!r}).write_text(json.dumps(sys.argv[1:]), encoding="utf-8")
+pathlib.Path({str(stdin_path)!r}).write_text(sys.stdin.read(), encoding="utf-8")
+print('{{"sentiment_score": 71}}')
+""",
+    )
+    preset = LocalCliPreset(
+        preset_id="cursor_cli",
+        executable=sys.executable,
+        argv=(script, *CURSOR_CLI_PRESET.argv),
+        display_name="Mock Cursor CLI",
+        contract_args=CURSOR_CLI_PRESET.contract_args,
+        prompt_transport=CURSOR_CLI_PRESET.prompt_transport,
+    )
+    backend = LocalCliGenerationBackend(
+        _config(generation_backend="cursor_cli"),
+        preset=preset,
+    )
+
+    result = backend.generate("prompt from dsa", {}, response_validator=lambda text: json.loads(text))
+    argv = json.loads(argv_path.read_text(encoding="utf-8"))
+
+    assert json.loads(result.text)["sentiment_score"] == 71
+    assert stdin_path.read_text(encoding="utf-8") == "prompt from dsa"
+    assert argv == ["-p", "--mode", "ask", "--output-format", "text", "--trust"]
+    assert "--model" not in argv
+    assert "--force" not in argv
+    assert "--yolo" not in argv
+    assert result.backend == "cursor_cli"
+    assert result.provider == "cursor_cli"
+    assert result.model == "cursor_cli"
+    assert result.usage["usage_available"] is False
+
+
+def test_cursor_cli_model_override_appends_model_arg(tmp_path: Path) -> None:
+    argv_path = tmp_path / "argv.json"
+    script = _script(
+        tmp_path,
+        f"""
+import json, pathlib, sys
+pathlib.Path({str(argv_path)!r}).write_text(json.dumps(sys.argv[1:]), encoding="utf-8")
+print("ok")
+""",
+    )
+    preset = LocalCliPreset(
+        preset_id="cursor_cli",
+        executable=sys.executable,
+        argv=(script, *CURSOR_CLI_PRESET.argv),
+        display_name="Mock Cursor CLI",
+        contract_args=CURSOR_CLI_PRESET.contract_args,
+        prompt_transport=CURSOR_CLI_PRESET.prompt_transport,
+    )
+    backend = LocalCliGenerationBackend(
+        _config(
+            generation_backend="cursor_cli",
+            cursor_cli_model="claude-opus-4-8[context=1m,effort=high,fast=false]",
+        ),
+        preset=preset,
+    )
+
+    result = backend.generate("prompt", {})
+    argv = json.loads(argv_path.read_text(encoding="utf-8"))
+
+    assert result.text == "ok"
+    assert argv == [
+        "-p",
+        "--mode",
+        "ask",
+        "--output-format",
+        "text",
+        "--trust",
+        "--model",
+        "claude-opus-4-8[context=1m,effort=high,fast=false]",
+    ]
+
+
+def test_cursor_cli_runtime_rejects_unsafe_model_override(tmp_path: Path) -> None:
+    script = _script(
+        tmp_path,
+        """
+print("should not execute")
+""",
+    )
+    preset = LocalCliPreset(
+        preset_id="cursor_cli",
+        executable=sys.executable,
+        argv=(script, *CURSOR_CLI_PRESET.argv),
+        display_name="Mock Cursor CLI",
+        contract_args=CURSOR_CLI_PRESET.contract_args,
+        prompt_transport=CURSOR_CLI_PRESET.prompt_transport,
+    )
+    backend = LocalCliGenerationBackend(
+        _config(generation_backend="cursor_cli", cursor_cli_model="model;$NAME"),
+        preset=preset,
+    )
+
+    with pytest.raises(GenerationError) as exc_info:
+        backend.generate("prompt", {})
+
+    assert exc_info.value.error_code is GenerationErrorCode.UNSAFE_CONFIG
+    assert exc_info.value.details["reason"] == "unsafe_cursor_cli_model"
 
 
 def test_opencode_extractor_rejects_tool_event() -> None:
@@ -1394,6 +1504,8 @@ def test_env_allowlist_and_denylist(monkeypatch) -> None:
     monkeypatch.setenv("CLAUDE_CONFIG_DIR", "/tmp/claude")
     monkeypatch.setenv("LONGBRIDGE_APP_KEY", "longbridge-secret")
     monkeypatch.setenv("OPENCODE_CONFIG_CONTENT", "{}")
+    monkeypatch.setenv("CURSOR_API_KEY", "cursor-secret")
+    monkeypatch.setenv("CURSOR_API_ENDPOINT", "https://example.invalid")
     monkeypatch.setenv("OPENAI_API_KEY", "sk-secret")
     monkeypatch.setenv("PUSHOVER_USER_KEY", "pushover-secret")
     monkeypatch.setenv("WEBHOOK_TOKEN", "token")
@@ -1414,6 +1526,8 @@ def test_env_allowlist_and_denylist(monkeypatch) -> None:
     assert "CLAUDE_CONFIG_DIR" not in child_env
     assert "LONGBRIDGE_APP_KEY" not in child_env
     assert "OPENCODE_CONFIG_CONTENT" not in child_env
+    assert "CURSOR_API_KEY" not in child_env
+    assert "CURSOR_API_ENDPOINT" not in child_env
     assert "OPENAI_API_KEY" not in child_env
     assert "PUSHOVER_USER_KEY" not in child_env
     assert "WEBHOOK_TOKEN" not in child_env

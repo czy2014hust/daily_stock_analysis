@@ -29,6 +29,7 @@ from urllib.parse import parse_qsl, urlsplit
 from src.llm.backend_registry import (
     CLAUDE_CODE_CLI_BACKEND_ID,
     CODEX_CLI_BACKEND_ID,
+    CURSOR_CLI_BACKEND_ID,
     OPENCODE_CLI_BACKEND_ID,
 )
 from src.llm.generation_backend import (
@@ -129,6 +130,7 @@ _SENSITIVE_ENV_PATTERNS = (
     "BASE_URL",
     "CLAUDE_",
     "COOKIE",
+    "CURSOR_",
     "DATABASE_URL",
     "DB_URL",
     "FEISHU",
@@ -590,10 +592,38 @@ OPENCODE_CLI_PRESET = LocalCliPreset(
     prompt_transport="file",
 )
 
+# Cursor Agent CLI print mode reads the full prompt from stdin when argv prompt
+# is empty. Prefer cursor-agent (install name) over the generic `agent` symlink.
+# --mode ask keeps generation read-only; --output-format text returns only the
+# final assistant message (no tool/progress noise).
+CURSOR_CLI_PRESET = LocalCliPreset(
+    preset_id=CURSOR_CLI_BACKEND_ID,
+    executable="cursor-agent",
+    argv=(
+        "-p",
+        "--mode",
+        "ask",
+        "--output-format",
+        "text",
+        "--trust",
+    ),
+    display_name="Cursor CLI",
+    contract_args=(
+        "-p",
+        "--mode",
+        "ask",
+        "--output-format",
+        "text",
+        "--trust",
+    ),
+    prompt_transport="stdin",
+)
+
 SAFE_LOCAL_CLI_PRESETS = {
     CODEX_CLI_BACKEND_ID: CODEX_CLI_PRESET,
     CLAUDE_CODE_CLI_BACKEND_ID: CLAUDE_CODE_CLI_PRESET,
     OPENCODE_CLI_BACKEND_ID: OPENCODE_CLI_PRESET,
+    CURSOR_CLI_BACKEND_ID: CURSOR_CLI_PRESET,
 }
 
 
@@ -2569,6 +2599,11 @@ class LocalCliGenerationBackend(GenerationBackend):
         argv: list[str],
         prompt_path: Optional[Path],
     ) -> list[str]:
+        if self._preset.preset_id == CURSOR_CLI_BACKEND_ID:
+            model = self._get_cursor_cli_model()
+            if not model:
+                return argv
+            return [*argv, "--model", model]
         if self._preset.preset_id != OPENCODE_CLI_BACKEND_ID:
             return argv
         model = self._get_opencode_cli_model()
@@ -2598,8 +2633,14 @@ class LocalCliGenerationBackend(GenerationBackend):
             ]
         return runtime_argv
 
-    def _get_opencode_cli_model(self) -> str:
-        model = str(getattr(self._config, "opencode_cli_model", "") or "").strip()
+    def _get_safe_optional_cli_model(
+        self,
+        *,
+        attr_name: str,
+        field_name: str,
+        reason: str,
+    ) -> str:
+        model = str(getattr(self._config, attr_name, "") or "").strip()
         if not model:
             return ""
         unsafe = _first_unsafe_token([model])
@@ -2610,12 +2651,26 @@ class LocalCliGenerationBackend(GenerationBackend):
                 retryable=False,
                 fallbackable=False,
                 details={
-                    "reason": "unsafe_opencode_cli_model",
-                    "field": "OPENCODE_CLI_MODEL",
+                    "reason": reason,
+                    "field": field_name,
                     "token_preview": unsafe or redact_diagnostic_text(model, limit=120),
                 },
             )
         return model
+
+    def _get_opencode_cli_model(self) -> str:
+        return self._get_safe_optional_cli_model(
+            attr_name="opencode_cli_model",
+            field_name="OPENCODE_CLI_MODEL",
+            reason="unsafe_opencode_cli_model",
+        )
+
+    def _get_cursor_cli_model(self) -> str:
+        return self._get_safe_optional_cli_model(
+            attr_name="cursor_cli_model",
+            field_name="CURSOR_CLI_MODEL",
+            reason="unsafe_cursor_cli_model",
+        )
 
     def _build_preset_child_env(
         self,

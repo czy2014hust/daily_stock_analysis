@@ -39,7 +39,7 @@ const settingsHelpZhCN: SettingsHelpMap = {
     usage: '通常保持“默认模型配置”。只有在本机已安装并登录对应 CLI，且你信任它处理分析内容时，才选择本地 CLI 生成方式（实验）。',
     valueNotes: [
       '本地 CLI 生成方式是本机启动的命令行程序，不等于离线模型；背后的服务可能处理股票代码、新闻、持仓上下文、分析请求和报告草稿。',
-      'Docker、云服务器、CI 不天然拥有你本机的登录状态；DSA 不读取 Codex/Claude/OpenCode 登录凭据文件，但对应 CLI 自己可能使用它的登录状态。',
+      'Docker、云服务器、CI 不天然拥有你本机的登录状态；DSA 不读取 Codex/Claude/OpenCode/Cursor 登录凭据文件，但对应 CLI 自己可能使用它的登录状态。',
     ],
     impact: ['影响普通分析、大盘复盘和文本生成入口，不改变问股助手的工具执行规则。'],
     notes: [
@@ -75,6 +75,19 @@ const settingsHelpZhCN: SettingsHelpMap = {
     ],
     impact: ['影响普通分析、大盘复盘和文本生成的 OpenCode CLI 调用，不影响问股助手。'],
     examples: ['OPENCODE_CLI_MODEL=provider/model'],
+  },
+  'settings.ai_model.CURSOR_CLI_MODEL': {
+    title: 'Cursor CLI 模型',
+    showFieldKey: true,
+    summary: '可选：指定 DSA 调用 Cursor Agent CLI 时传给 --model 的模型名。',
+    usage: '仅在“分析生成方式”选择 Cursor CLI 时生效。留空时 DSA 不传 --model，使用你本机 Cursor CLI 的默认模型。',
+    valueNotes: [
+      '模型是否可用、如何认证由你本机的 Cursor 登录态或 CURSOR_API_KEY 负责；DSA 不会把 DSA API Key 注入子进程。',
+      '配置时该值会作为单个 argv 参数传给 cursor-agent，不能包含空白或 shell 元字符。',
+      '可用模型因账号与 CLI 版本而异；可在本机执行 cursor-agent --list-models 查看。',
+    ],
+    impact: ['影响普通分析、大盘复盘和文本生成的 Cursor CLI 调用，不影响问股助手。'],
+    examples: ['CURSOR_CLI_MODEL=sonnet-4-thinking', 'CURSOR_CLI_MODEL=gpt-5'],
   },
   'settings.ai_model.GENERATION_BACKEND_TIMEOUT_SECONDS': {
     title: '生成超时（秒）',
@@ -1292,7 +1305,7 @@ const settingsHelpEnUS: SettingsHelpMap = {
     usage: 'Usually keep Default model settings. Choose a local CLI backend only when the corresponding CLI is installed and logged in on this machine and you trust it to handle analysis content.',
     valueNotes: [
       'Local CLI backends are local command-line programs, not offline models. The service behind them may process stock symbols, news, position context, analysis requests, and report drafts.',
-      'Docker, cloud servers, and CI do not automatically have your local login state. DSA does not read Codex/Claude/OpenCode credential files, but the corresponding CLI itself may use its login state.',
+      'Docker, cloud servers, and CI do not automatically have your local login state. DSA does not read Codex/Claude/OpenCode/Cursor credential files, but the corresponding CLI itself may use its login state.',
     ],
     impact: ['Affects regular analysis, market review, and text generation entry points. It does not change how the ask-stock assistant runs tools.'],
     notes: [
@@ -1328,6 +1341,19 @@ const settingsHelpEnUS: SettingsHelpMap = {
     ],
     impact: ['Affects regular analysis, market review, and text generation through OpenCode CLI. It does not affect the ask-stock assistant.'],
     examples: ['OPENCODE_CLI_MODEL=provider/model'],
+  },
+  'settings.ai_model.CURSOR_CLI_MODEL': {
+    title: 'Cursor CLI Model',
+    showFieldKey: true,
+    summary: 'Optional model name passed to Cursor Agent CLI through --model.',
+    usage: 'Only applies when Analysis Generation Method is Cursor CLI. Leave it empty and DSA will not pass --model, so Cursor CLI uses its local default model.',
+    valueNotes: [
+      'Model availability and authentication are handled by your local Cursor login state or CURSOR_API_KEY; DSA does not inject DSA API keys into the child process.',
+      'When set, the value is passed as one argv token and must not contain whitespace or shell metacharacters.',
+      'Available models depend on your account and CLI version; run cursor-agent --list-models locally to inspect them.',
+    ],
+    impact: ['Affects regular analysis, market review, and text generation through Cursor CLI. It does not affect the ask-stock assistant.'],
+    examples: ['CURSOR_CLI_MODEL=sonnet-4-thinking', 'CURSOR_CLI_MODEL=gpt-5'],
   },
   'settings.ai_model.GENERATION_BACKEND_TIMEOUT_SECONDS': {
     title: 'Generation Timeout (Seconds)',

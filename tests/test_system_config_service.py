@@ -1388,7 +1388,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         self.assertIn("暂不支持 codex_cli", checks["llm_agent"]["message"])
 
     def test_get_setup_status_rejects_agent_claude_and_opencode_tool_backends(self) -> None:
-        for backend in ("claude_code_cli", "opencode_cli"):
+        for backend in ("claude_code_cli", "opencode_cli", "cursor_cli"):
             with self.subTest(backend=backend):
                 self._rewrite_env(
                     "GENERATION_BACKEND=litellm",
@@ -1417,6 +1417,21 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_primary"]["status"], "configured")
         self.assertIn("OpenCode CLI", checks["llm_primary"]["message"])
+
+    def test_get_setup_status_accepts_cursor_cli_without_model_override(self) -> None:
+        self._rewrite_env(
+            "GENERATION_BACKEND=cursor_cli",
+            "GENERATION_FALLBACK_BACKEND=",
+            "STOCK_LIST=600519",
+        )
+
+        with patch.dict(os.environ, {}, clear=True), \
+             patch("src.services.system_config_service.shutil.which", return_value="/usr/bin/cursor-agent"):
+            status = self.service.get_setup_status()
+
+        checks = {check["key"]: check for check in status["checks"]}
+        self.assertEqual(checks["llm_primary"]["status"], "configured")
+        self.assertIn("Cursor CLI", checks["llm_primary"]["message"])
 
     def test_get_setup_status_agent_litellm_without_model_reports_missing_model(self) -> None:
         self._rewrite_env(

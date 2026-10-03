@@ -711,6 +711,7 @@ class GenerationBackendStatusService:
                 _LOCAL_CLI_NUMERIC_SPECS[3],
             ),
             opencode_cli_model=(self._effective_map.get("OPENCODE_CLI_MODEL") or "").strip(),
+            cursor_cli_model=(self._effective_map.get("CURSOR_CLI_MODEL") or "").strip(),
             litellm_model=litellm_model,
             llm_model_list=model_list,
         )
@@ -737,6 +738,7 @@ class GenerationBackendStatusService:
             generation_backend_max_concurrency=config.generation_backend_max_concurrency,
             local_cli_backend_max_concurrency=config.local_cli_backend_max_concurrency,
             opencode_cli_model=config.opencode_cli_model,
+            cursor_cli_model=config.cursor_cli_model,
             litellm_model=config.litellm_model,
             litellm_fallback_models=self._split_csv(self._effective_map.get("LITELLM_FALLBACK_MODELS") or ""),
             llm_model_list=config.llm_model_list,

@@ -695,6 +695,7 @@ class TestAnalyzerGenerateText:
             ("codex_cli", "codex"),
             ("claude_code_cli", "claude"),
             ("opencode_cli", "opencode"),
+            ("cursor_cli", "cursor-agent"),
         ],
     )
     def test_local_cli_is_available_without_litellm_api_keys(self, generation_backend, executable_name):
