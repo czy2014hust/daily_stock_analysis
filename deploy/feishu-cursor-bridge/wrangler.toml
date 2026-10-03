@@ -1,0 +1,23 @@
+# Cloudflare Worker: Feishu text → GitHub Actions → Cursor skill → Feishu webhook
+#
+# Deploy:
+#   npm i -g wrangler
+#   cd deploy/feishu-cursor-bridge
+#   wrangler secret put FEISHU_APP_ID
+#   wrangler secret put FEISHU_APP_SECRET
+#   wrangler secret put GITHUB_TOKEN
+#   wrangler deploy
+#
+# Then set Feishu event subscription Request URL to:
+#   https://<your-worker>.workers.dev/
+
+name = "feishu-cursor-bridge"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+GITHUB_REPO = "czy2014hust/daily_stock_analysis"
+GITHUB_EVENT_TYPE = "feishu-strategy-research"
+FEISHU_DOMAIN = "feishu"
+# Optional command prefixes (comma-separated). Empty = any text triggers research.
+COMMAND_PREFIXES = "/策略研究,/tsr,策略研究,交易策略研究,/trading-strategy-research"
