@@ -83,7 +83,9 @@ def test_create_agent_run_posts_expected_payload(monkeypatch: pytest.MonkeyPatch
             "run": {"id": "run-1"},
         }
 
-    monkeypatch.setattr(mod, "cursor_api_request", fake_request)
+    import src.services.cursor_cloud_agent as cloud_agent
+
+    monkeypatch.setattr(cloud_agent, "cursor_api_request", fake_request)
     agent_id, run_id, url = mod.create_agent_run(
         api_key="key",
         api_base="https://api.cursor.com",
@@ -111,8 +113,10 @@ def test_wait_for_run_returns_on_finished(monkeypatch: pytest.MonkeyPatch) -> No
             return {"id": "run-1", "status": "RUNNING"}
         return {"id": "run-1", "status": "FINISHED", "result": "done"}
 
-    monkeypatch.setattr(mod, "cursor_api_request", fake_request)
-    monkeypatch.setattr(mod.time, "sleep", lambda *_args, **_kwargs: None)
+    import src.services.cursor_cloud_agent as cloud_agent
+
+    monkeypatch.setattr(cloud_agent, "cursor_api_request", fake_request)
+    monkeypatch.setattr(cloud_agent.time, "sleep", lambda *_args, **_kwargs: None)
     run = mod.wait_for_run(
         api_key="key",
         api_base="https://api.cursor.com",
@@ -164,9 +168,11 @@ def test_send_feishu_webhook_posts_card(monkeypatch: pytest.MonkeyPatch) -> None
         posts.append(json.loads(request.data.decode("utf-8")))
         return FakeResp()
 
+    import src.services.feishu_webhook_lite as webhook_lite
+
     monkeypatch.setenv("FEISHU_WEBHOOK_URL", "https://open.feishu.cn/open-apis/bot/v2/hook/test")
     monkeypatch.delenv("FEISHU_WEBHOOK_SECRET", raising=False)
-    monkeypatch.setattr(mod, "urlopen", fake_urlopen)
+    monkeypatch.setattr(webhook_lite, "urlopen", fake_urlopen)
     assert mod._send_feishu_webhook("hello from probe") is True
     assert posts
     assert posts[0]["msg_type"] == "interactive"
@@ -218,7 +224,9 @@ def test_cursor_api_request_surfaces_http_error(monkeypatch: pytest.MonkeyPatch)
     def fake_urlopen(*_args, **_kwargs):
         raise FakeHTTPError()
 
-    monkeypatch.setattr(mod, "urlopen", fake_urlopen)
+    import src.services.cursor_cloud_agent as cloud_agent
+
+    monkeypatch.setattr(cloud_agent, "urlopen", fake_urlopen)
     with pytest.raises(RuntimeError, match="HTTP 401"):
         mod.cursor_api_request(
             "GET",

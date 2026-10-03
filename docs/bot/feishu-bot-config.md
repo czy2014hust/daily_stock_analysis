@@ -294,3 +294,70 @@ https://open.feishu.cn/document/develop-an-echo-bot/introduction
 ### 5. 消息交互
 
 ![img_10.png](img_10.png)
+
+## 飞书收消息 → 交易策略研究（Cursor skill）
+
+支持在飞书里发 **text**，调用 Cursor skill `/trading-strategy-research`，研究结束后把结论回飞书。
+
+### 交互方式
+
+| 发送内容 | 说明 |
+| --- | --- |
+| `/策略研究 算力板块量化策略` | 推荐 |
+| `/tsr 埋伏低位高景气方向` | 英文短命令 |
+| `策略研究 半导体供应链` | 无 `/` 的中文命令 |
+
+流程：
+1. 飞书 Stream Bot 收到 text
+2. 立刻回复「已收到研究请求」
+3. 后台调用 Cursor Cloud Agents API 执行 skill
+4. 完成后 **回复原消息**；若配置了 `FEISHU_WEBHOOK_URL`，同时广播到群机器人
+
+### 需要配置的变量
+
+**必填（接收 + 回复）：**
+
+```env
+# App Bot / Stream（接收群/私聊 text，并回复结论）
+FEISHU_APP_ID=cli_xxx
+FEISHU_APP_SECRET=xxx
+FEISHU_STREAM_ENABLED=true
+FEISHU_DOMAIN=feishu
+
+# Cursor Cloud Agents
+CURSOR_API_KEY=                    # https://cursor.com/dashboard?tab=integrations
+CURSOR_AGENT_REPO_URL=https://github.com/<owner>/<repo>
+CURSOR_AGENT_STARTING_REF=main
+```
+
+**推荐（群广播结论，与每日推送同一通道）：**
+
+```env
+FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/your_hook_token
+# 按需
+FEISHU_WEBHOOK_SECRET=your_sign_secret
+FEISHU_WEBHOOK_KEYWORD=股票日报
+```
+
+**可选：**
+
+```env
+CURSOR_AGENT_MODEL=                # Cloud Agent 模型 ID
+CURSOR_AGENT_TIMEOUT_SECONDS=3600
+BOT_ENABLED=true
+```
+
+### 飞书开放平台侧检查清单
+
+1. 创建企业自建应用，拿到 `App ID` / `App Secret`
+2. 开通权限：接收消息、发送消息（`im:message` 等，按控制台提示）
+3. 事件订阅选 **长连接 / Stream**（本项目 `FEISHU_STREAM_ENABLED=true`，无需公网 Webhook）
+4. 订阅事件：`im.message.receive_v1`
+5. 发布应用，并把机器人拉进目标群
+6. 群聊中 @机器人 或私聊发送 `/策略研究 ...`
+
+### 启动
+
+与现有 Bot 相同：开启服务后（`python main.py --serve-only` 或 Docker），Stream 长连接会自动拉起。确认日志中有 Feishu Stream 已连接。
+
+详细调度说明见 [每日交易策略研究调度](../TRADING_STRATEGY_RESEARCH_SCHEDULE.md)。

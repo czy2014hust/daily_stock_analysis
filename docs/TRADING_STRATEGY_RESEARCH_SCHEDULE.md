@@ -51,6 +51,22 @@ Workflow 文件：`.github/workflows/daily-trading-strategy-research.yml`
 | `TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA` | 固定追加研究焦点 | 空 |
 | `TRADING_STRATEGY_RESEARCH_TIMEOUT_MINUTES` | Actions job 超时 | `90` |
 
+## 飞书 Bot 交互（收 text → 研究 → 回飞书）
+
+在已启用飞书 Stream Bot 时，可直接发文本触发同一 skill：
+
+```text
+/策略研究 算力板块量化策略
+/tsr 埋伏低位高景气方向
+策略研究 半导体供应链
+```
+
+实现：`bot/commands/strategy_research.py`  
+配置清单见 [飞书 Bot 配置](bot/feishu-bot-config.md#飞书收消息--交易策略研究cursor-skill)。
+
+必填：`FEISHU_APP_ID` + `FEISHU_APP_SECRET` + `FEISHU_STREAM_ENABLED=true` + `CURSOR_API_KEY`  
+推荐：`FEISHU_WEBHOOK_URL`（结论同步广播到群）
+
 ## 使用方式
 
 ### GitHub Actions（推荐）
