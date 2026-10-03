@@ -4,6 +4,9 @@ on:
   # 每天北京时间 09:00（UTC 01:00）
   schedule:
     - cron: '0 1 * * *'
+  # 无服务器：飞书 Cloudflare Worker 桥接 → repository_dispatch
+  repository_dispatch:
+    types: [feishu-strategy-research]
   workflow_dispatch:
     inputs:
       feishu_test_only:
@@ -45,6 +48,33 @@ jobs:
           pip install --upgrade pip
           pip install python-dotenv requests lark-oapi
 
+      - name: Resolve research focus from event
+        id: focus
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_TEXT: ${{ github.event.client_payload.text || '' }}
+          INPUT_EXTRA: ${{ github.event.inputs.extra_prompt || '' }}
+          VAR_EXTRA: ${{ vars.TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA || '' }}
+        run: |
+          set -euo pipefail
+          FOCUS=""
+          if [ "$EVENT_NAME" = "repository_dispatch" ]; then
+            FOCUS="$DISPATCH_TEXT"
+            echo "Source: Feishu repository_dispatch"
+          elif [ -n "${INPUT_EXTRA}" ]; then
+            FOCUS="$INPUT_EXTRA"
+            echo "Source: workflow_dispatch input"
+          else
+            FOCUS="$VAR_EXTRA"
+            echo "Source: schedule/vars"
+          fi
+          {
+            echo "text<<EOF"
+            printf '%s\n' "$FOCUS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "Focus chars: ${#FOCUS}"
+
       - name: Require CURSOR_API_KEY
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.feishu_test_only != 'true' }}
         env:
@@ -62,10 +92,10 @@ jobs:
           CURSOR_AGENT_REPO_URL: ${{ vars.CURSOR_AGENT_REPO_URL || format('https://github.com/{0}', github.repository) }}
           CURSOR_AGENT_STARTING_REF: ${{ vars.CURSOR_AGENT_STARTING_REF || 'main' }}
           CURSOR_AGENT_MODEL: ${{ vars.CURSOR_AGENT_MODEL || secrets.CURSOR_AGENT_MODEL }}
-          CURSOR_AGENT_NAME: ${{ vars.CURSOR_AGENT_NAME || 'Daily Trading Strategy Research' }}
+          CURSOR_AGENT_NAME: ${{ github.event_name == 'repository_dispatch' && 'Feishu Trading Strategy Research' || vars.CURSOR_AGENT_NAME || 'Daily Trading Strategy Research' }}
           CURSOR_AGENT_POLL_SECONDS: ${{ vars.CURSOR_AGENT_POLL_SECONDS || '20' }}
           CURSOR_AGENT_TIMEOUT_SECONDS: ${{ vars.CURSOR_AGENT_TIMEOUT_SECONDS || '3300' }}
-          TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA: ${{ github.event.inputs.extra_prompt || vars.TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA || '' }}
+          TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA: ${{ steps.focus.outputs.text }}
           SKIP_FEISHU: ${{ github.event.inputs.skip_feishu == 'true' && 'true' || 'false' }}
           FEISHU_TEST_ONLY: ${{ github.event.inputs.feishu_test_only == 'true' && 'true' || 'false' }}
           # Reuse the same Feishu secrets as 每日股票分析
@@ -82,9 +112,13 @@ jobs:
         run: |
           set -euo pipefail
           echo "Repo: $CURSOR_AGENT_REPO_URL @ $CURSOR_AGENT_STARTING_REF"
+          echo "Event: ${{ github.event_name }}"
           echo "Feishu test only: ${FEISHU_TEST_ONLY:-false}"
           echo "Feishu webhook: $([ -n "${FEISHU_WEBHOOK_URL:-}" ] && echo configured || echo missing)"
           echo "Feishu app bot: $([ -n "${FEISHU_APP_ID:-}" ] && [ -n "${FEISHU_APP_SECRET:-}" ] && [ -n "${FEISHU_CHAT_ID:-}" ] && echo configured || echo missing)"
+          if [ -n "${TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA:-}" ]; then
+            echo "Focus preview: $(printf '%s' "$TRADING_STRATEGY_RESEARCH_PROMPT_EXTRA" | head -c 120)"
+          fi
           if [ "${FEISHU_TEST_ONLY:-false}" = "true" ]; then
             python scripts/trigger_trading_strategy_research.py --feishu-test
           else
