@@ -122,6 +122,7 @@ and keep the final reply as a concise Chinese summary for Feishu.
 ## 输出与排障
 
 - Actions Artifact：`trading-strategy-research-<run>`（摘要 Markdown）
+- 完整报告：`reports/trading_strategy_research_YYYYMMDD.md`（`.gitignore` 忽略 `reports/*`，但放行 `reports/trading_strategy_research_*.md`，便于把当日研究入库）
 - 本地摘要：`reports/trading_strategy_research_YYYYMMDD_summary.md`
 - Cursor Agent 链接会出现在飞书消息中，便于点开完整过程
 - 常见失败：
