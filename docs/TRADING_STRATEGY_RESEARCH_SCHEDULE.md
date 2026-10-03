@@ -72,7 +72,12 @@ python scripts/trigger_trading_strategy_research.py --dry-run-prompt
 
 # 触发 Cursor 但不发飞书
 python scripts/trigger_trading_strategy_research.py --skip-feishu
+
+# 仅测试飞书连通性（不调用 Cursor API）
+python scripts/trigger_trading_strategy_research.py --feishu-test
 ```
+
+GitHub Actions 手动运行时也可勾选 **仅测试飞书连通性**。
 
 ## Cursor Automations UI（备选）
 

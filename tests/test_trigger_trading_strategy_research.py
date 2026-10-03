@@ -147,6 +147,32 @@ def test_run_feishu_test_sends_message(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "FEISHU_TEST" in sent["content"]
 
 
+def test_send_feishu_webhook_posts_card(monkeypatch: pytest.MonkeyPatch) -> None:
+    posts: list = []
+
+    class FakeResp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b'{"code":0,"msg":"success"}'
+
+    def fake_urlopen(request, timeout=30):
+        posts.append(json.loads(request.data.decode("utf-8")))
+        return FakeResp()
+
+    monkeypatch.setenv("FEISHU_WEBHOOK_URL", "https://open.feishu.cn/open-apis/bot/v2/hook/test")
+    monkeypatch.delenv("FEISHU_WEBHOOK_SECRET", raising=False)
+    monkeypatch.setattr(mod, "urlopen", fake_urlopen)
+    assert mod._send_feishu_webhook("hello from probe") is True
+    assert posts
+    assert posts[0]["msg_type"] == "interactive"
+    assert "hello from probe" in posts[0]["card"]["elements"][0]["text"]["content"]
+
+
 def test_run_end_to_end_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("CURSOR_API_KEY", "test-key")
     monkeypatch.setenv("CURSOR_AGENT_REPO_URL", "https://github.com/acme/demo")
