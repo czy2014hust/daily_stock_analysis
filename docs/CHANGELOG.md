@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- [文档] 推荐无服务器路径改为飞书自动化直接调用 GitHub `repository_dispatch`（`docs/bot/feishu-github-dispatch.md`），不再依赖 Cloudflare Worker URL 校验。
 - [新功能] 无服务器飞书触发：Cloudflare Worker 桥接飞书 text → GitHub `repository_dispatch` → Actions 调用 Cursor `trading-strategy-research` → `FEISHU_WEBHOOK_URL` 回传结论（`deploy/feishu-cursor-bridge/`）。
 - [新功能] 飞书 Stream Bot 支持 `/策略研究`（`/tsr`）：接收 text → 调用 Cursor `trading-strategy-research` skill → 回复会话并可选 Webhook 广播结论。
 - [新功能] 支持每天北京时间 09:00 通过 Cursor Cloud Agents API 执行 `trading-strategy-research` skill，并将摘要推送到已配置飞书群（GitHub Actions + `scripts/trigger_trading_strategy_research.py`）。
