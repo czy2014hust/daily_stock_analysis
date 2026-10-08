@@ -1,0 +1,2799 @@
+{
+  "meta": {
+    "eval_start": "2022-01-04",
+    "eval_end": "2026-09-30",
+    "is_end": "2024-12-31",
+    "cost_bps_one_way": 15.0,
+    "liquidity_floor_wan": 5000.0,
+    "n_names_loaded": 29,
+    "notes": [
+      "qfq close from Tencent newfqkline",
+      "amount in 万元",
+      "2026-10-08 intraday session excluded from backtest",
+      "long-only, no leverage, T+1 approximated by next-session return"
+    ]
+  },
+  "coverage": {
+    "002463": {
+      "name": "沪电股份",
+      "sub": "AI_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "300476": {
+      "name": "胜宏科技",
+      "sub": "AI_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002916": {
+      "name": "深南电路",
+      "sub": "AI_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "688183": {
+      "name": "生益电子",
+      "sub": "AI_PCB",
+      "start": "2021-02-25",
+      "end": "2026-09-30",
+      "n": 1360
+    },
+    "001389": {
+      "name": "广合科技",
+      "sub": "AI_PCB",
+      "start": "2024-04-02",
+      "end": "2026-09-30",
+      "n": 607
+    },
+    "603228": {
+      "name": "景旺电子",
+      "sub": "AI_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "301366": {
+      "name": "一博科技",
+      "sub": "AI_PCB",
+      "start": "2022-09-26",
+      "end": "2026-09-30",
+      "n": 973
+    },
+    "002938": {
+      "name": "鹏鼎控股",
+      "sub": "FPC",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002384": {
+      "name": "东山精密",
+      "sub": "FPC",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "300657": {
+      "name": "弘信电子",
+      "sub": "FPC",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1532
+    },
+    "600183": {
+      "name": "生益科技",
+      "sub": "CCL",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "688519": {
+      "name": "南亚新材",
+      "sub": "CCL",
+      "start": "2020-08-18",
+      "end": "2026-09-30",
+      "n": 1485
+    },
+    "603186": {
+      "name": "华正新材",
+      "sub": "CCL",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002636": {
+      "name": "金安国纪",
+      "sub": "CCL",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002815": {
+      "name": "崇达技术",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002913": {
+      "name": "奥士康",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "002436": {
+      "name": "兴森科技",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "603920": {
+      "name": "世运电路",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1536
+    },
+    "000823": {
+      "name": "超声电子",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "603328": {
+      "name": "依顿电子",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "603936": {
+      "name": "博敏电子",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "300814": {
+      "name": "中富电路",
+      "sub": "MID_PCB",
+      "start": "2021-08-12",
+      "end": "2026-09-30",
+      "n": 1245
+    },
+    "301251": {
+      "name": "威尔高",
+      "sub": "MID_PCB",
+      "start": "2023-09-06",
+      "end": "2026-09-30",
+      "n": 743
+    },
+    "600601": {
+      "name": "方正科技",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1535
+    },
+    "002579": {
+      "name": "中京电子",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    },
+    "300903": {
+      "name": "科翔股份",
+      "sub": "MID_PCB",
+      "start": "2020-11-05",
+      "end": "2026-09-30",
+      "n": 1434
+    },
+    "300964": {
+      "name": "本川智能",
+      "sub": "MID_PCB",
+      "start": "2021-08-05",
+      "end": "2026-09-30",
+      "n": 1250
+    },
+    "301282": {
+      "name": "金禄电子",
+      "sub": "MID_PCB",
+      "start": "2022-08-26",
+      "end": "2026-09-30",
+      "n": 993
+    },
+    "603386": {
+      "name": "骏亚科技",
+      "sub": "MID_PCB",
+      "start": "2020-06-01",
+      "end": "2026-09-30",
+      "n": 1539
+    }
+  },
+  "regime": {
+    "last_completed_session": "2026-09-30",
+    "n_names": 29,
+    "basket_ret_20": 0.125927,
+    "basket_ret_60": 0.047746,
+    "basket_ret_120": 0.659411,
+    "basket_ret_252": 1.106194,
+    "basket_vol_20": 0.541131,
+    "basket_vol_60": 0.720769,
+    "basket_dd_from_peak": -0.107432,
+    "breadth_above_ma60": 0.689655,
+    "breadth_above_ma200": 0.896552,
+    "cross_section_std_20d": 0.201928,
+    "median_amount_wan_20d": 189211.815,
+    "subchains": {
+      "AI_PCB": {
+        "n": 7,
+        "ret_20": 0.044983,
+        "ret_60": 0.017624,
+        "ret_252": 0.620953,
+        "vol_60": 0.725827
+      },
+      "CCL": {
+        "n": 4,
+        "ret_20": 0.039585,
+        "ret_60": -0.092597,
+        "ret_252": 3.603638,
+        "vol_60": 0.934469
+      },
+      "FPC": {
+        "n": 3,
+        "ret_20": -0.097751,
+        "ret_60": -0.175345,
+        "ret_252": 0.566541,
+        "vol_60": 0.627915
+      },
+      "MID_PCB": {
+        "n": 15,
+        "ret_20": 0.239429,
+        "ret_60": 0.143158,
+        "ret_252": 0.95984,
+        "vol_60": 0.744634
+      }
+    },
+    "indexes": {
+      "CHINEXT": {
+        "last": "2026-09-30",
+        "ret_20": -0.076073,
+        "ret_60": -0.19853,
+        "ret_252": 0.022536,
+        "vol_60": 0.438253,
+        "dd_from_peak": -0.282871
+      },
+      "HS300": {
+        "last": "2026-09-30",
+        "ret_20": -0.055041,
+        "ret_60": -0.090696,
+        "ret_252": -0.038702,
+        "vol_60": 0.202995,
+        "dd_from_peak": -0.249685
+      },
+      "SHCOMP": {
+        "last": "2026-09-30",
+        "ret_20": -0.034599,
+        "ret_60": -0.037103,
+        "ret_252": -0.004743,
+        "vol_60": 0.159033,
+        "dd_from_peak": -0.094372
+      }
+    }
+  },
+  "intraday_snapshot": {
+    "timestamp": "20261008132024",
+    "quotes": [
+      {
+        "code": "002463",
+        "name": "沪电股份",
+        "last": 117.52,
+        "prev_close": 115.93,
+        "pct": 1.37
+      },
+      {
+        "code": "300476",
+        "name": "胜宏科技",
+        "last": 207.39,
+        "prev_close": 210.3,
+        "pct": -1.38
+      },
+      {
+        "code": "002916",
+        "name": "深南电路",
+        "last": 373.6,
+        "prev_close": 373.01,
+        "pct": 0.16
+      },
+      {
+        "code": "688183",
+        "name": "生益电子",
+        "last": 105.89,
+        "prev_close": 108.0,
+        "pct": -1.95
+      },
+      {
+        "code": "001389",
+        "name": "广合科技",
+        "last": 168.32,
+        "prev_close": 176.66,
+        "pct": -4.72
+      },
+      {
+        "code": "603228",
+        "name": "景旺电子",
+        "last": 98.48,
+        "prev_close": 101.21,
+        "pct": -2.7
+      },
+      {
+        "code": "301366",
+        "name": "一博科技",
+        "last": 67.73,
+        "prev_close": 69.76,
+        "pct": -2.91
+      },
+      {
+        "code": "002938",
+        "name": "鹏鼎控股",
+        "last": 78.71,
+        "prev_close": 79.55,
+        "pct": -1.06
+      },
+      {
+        "code": "002384",
+        "name": "东山精密",
+        "last": 150.66,
+        "prev_close": 167.4,
+        "pct": -10.0
+      },
+      {
+        "code": "300657",
+        "name": "弘信电子",
+        "last": 31.4,
+        "prev_close": 32.4,
+        "pct": -3.09
+      },
+      {
+        "code": "600183",
+        "name": "生益科技",
+        "last": 133.69,
+        "prev_close": 129.96,
+        "pct": 2.87
+      },
+      {
+        "code": "688519",
+        "name": "南亚新材",
+        "last": 282.0,
+        "prev_close": 272.65,
+        "pct": 3.43
+      },
+      {
+        "code": "603186",
+        "name": "华正新材",
+        "last": 220.19,
+        "prev_close": 212.66,
+        "pct": 3.54
+      },
+      {
+        "code": "002636",
+        "name": "金安国纪",
+        "last": 80.18,
+        "prev_close": 79.45,
+        "pct": 0.92
+      },
+      {
+        "code": "002815",
+        "name": "崇达技术",
+        "last": 22.88,
+        "prev_close": 23.01,
+        "pct": -0.56
+      },
+      {
+        "code": "002913",
+        "name": "奥士康",
+        "last": 91.39,
+        "prev_close": 92.3,
+        "pct": -0.99
+      },
+      {
+        "code": "002436",
+        "name": "兴森科技",
+        "last": 40.59,
+        "prev_close": 40.94,
+        "pct": -0.85
+      },
+      {
+        "code": "603920",
+        "name": "世运电路",
+        "last": 43.04,
+        "prev_close": 44.4,
+        "pct": -3.06
+      },
+      {
+        "code": "000823",
+        "name": "超声电子",
+        "last": 22.86,
+        "prev_close": 23.28,
+        "pct": -1.8
+      },
+      {
+        "code": "603328",
+        "name": "依顿电子",
+        "last": 13.59,
+        "prev_close": 13.83,
+        "pct": -1.74
+      },
+      {
+        "code": "603936",
+        "name": "博敏电子",
+        "last": 19.21,
+        "prev_close": 19.35,
+        "pct": -0.72
+      },
+      {
+        "code": "300814",
+        "name": "中富电路",
+        "last": 119.36,
+        "prev_close": 121.86,
+        "pct": -2.05
+      },
+      {
+        "code": "301251",
+        "name": "威尔高",
+        "last": 79.35,
+        "prev_close": 81.1,
+        "pct": -2.16
+      },
+      {
+        "code": "600601",
+        "name": "方正科技",
+        "last": 12.85,
+        "prev_close": 13.2,
+        "pct": -2.65
+      },
+      {
+        "code": "002579",
+        "name": "中京电子",
+        "last": 16.5,
+        "prev_close": 16.88,
+        "pct": -2.25
+      },
+      {
+        "code": "300903",
+        "name": "科翔股份",
+        "last": 98.6,
+        "prev_close": 92.29,
+        "pct": 6.84
+      },
+      {
+        "code": "300964",
+        "name": "本川智能",
+        "last": 68.0,
+        "prev_close": 68.98,
+        "pct": -1.42
+      },
+      {
+        "code": "301282",
+        "name": "金禄电子",
+        "last": 40.92,
+        "prev_close": 41.67,
+        "pct": -1.8
+      },
+      {
+        "code": "603386",
+        "name": "骏亚科技",
+        "last": 17.72,
+        "prev_close": 17.4,
+        "pct": 1.84
+      },
+      {
+        "code": "000300",
+        "name": "沪深300",
+        "last": 4329.23,
+        "prev_close": 4357.62,
+        "pct": -0.65
+      },
+      {
+        "code": "399006",
+        "name": "创业板指",
+        "last": 3056.34,
+        "prev_close": 3135.28,
+        "pct": -2.52
+      },
+      {
+        "code": "000001",
+        "name": "上证指数",
+        "last": 3825.57,
+        "prev_close": 3842.19,
+        "pct": -0.43
+      }
+    ]
+  },
+  "metrics": {
+    "XSMOM": {
+      "total_return": 3.901263,
+      "cagr": 0.398759,
+      "vol": 0.562824,
+      "sharpe": 0.89912,
+      "sortino": 1.483019,
+      "max_drawdown": -0.562541,
+      "win_rate": 0.493043,
+      "profit_factor_daily": 1.163661,
+      "n_days": 1150,
+      "calmar": 0.708852,
+      "is": {
+        "total_return": 0.194013,
+        "cagr": 0.061104,
+        "vol": 0.489522,
+        "sharpe": 0.368491,
+        "sortino": 0.626788,
+        "max_drawdown": -0.556292,
+        "win_rate": 0.475207,
+        "profit_factor_daily": 1.063246,
+        "n_days": 726,
+        "calmar": 0.109841
+      },
+      "oos": {
+        "total_return": 3.104865,
+        "cagr": 1.250158,
+        "vol": 0.66916,
+        "sharpe": 1.589557,
+        "sortino": 2.572398,
+        "max_drawdown": -0.562541,
+        "win_rate": 0.523585,
+        "profit_factor_daily": 1.303658,
+        "n_days": 424,
+        "calmar": 2.222339
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.498139,
+          "cagr": -0.503159,
+          "vol": 0.434337,
+          "sharpe": -1.43348,
+          "sortino": -2.224606,
+          "max_drawdown": -0.554722,
+          "win_rate": 0.446281,
+          "profit_factor_daily": 0.791777,
+          "n_days": 242,
+          "calmar": -0.907048
+        },
+        "2023": {
+          "total_return": 0.297072,
+          "cagr": 0.302002,
+          "vol": 0.465398,
+          "sharpe": 0.813445,
+          "sortino": 1.351555,
+          "max_drawdown": -0.316114,
+          "win_rate": 0.495868,
+          "profit_factor_daily": 1.141893,
+          "n_days": 242,
+          "calmar": 0.955359
+        },
+        "2024": {
+          "total_return": 0.834261,
+          "cagr": 0.838087,
+          "vol": 0.558082,
+          "sharpe": 1.406943,
+          "sortino": 2.574313,
+          "max_drawdown": -0.338973,
+          "win_rate": 0.483471,
+          "profit_factor_daily": 1.270926,
+          "n_days": 242,
+          "calmar": 2.472426
+        },
+        "2025": {
+          "total_return": 0.565896,
+          "cagr": 0.570255,
+          "vol": 0.622288,
+          "sharpe": 1.056719,
+          "sortino": 1.739977,
+          "max_drawdown": -0.407153,
+          "win_rate": 0.477366,
+          "profit_factor_daily": 1.201924,
+          "n_days": 243,
+          "calmar": 1.400591
+        },
+        "2026": {
+          "total_return": 1.621416,
+          "cagr": 2.718874,
+          "vol": 0.727719,
+          "sharpe": 2.210814,
+          "sortino": 3.614276,
+          "max_drawdown": -0.562541,
+          "win_rate": 0.585635,
+          "profit_factor_daily": 1.419689,
+          "n_days": 181,
+          "calmar": 4.833198
+        }
+      },
+      "avg_exposure": 0.998478,
+      "pct_days_invested": 1.0,
+      "ann_turnover": 8.217391,
+      "avg_weight_top3": [
+        {
+          "code": "300476",
+          "avg_weight": 0.093913
+        },
+        {
+          "code": "002463",
+          "avg_weight": 0.091304
+        },
+        {
+          "code": "002384",
+          "avg_weight": 0.08587
+        }
+      ],
+      "max_avg_weight": 0.093913,
+      "tracking_error": 0.263544,
+      "info_ratio_vs_bench": 0.346918,
+      "corr_vs_bench": 0.892128
+    },
+    "DUAL": {
+      "total_return": 1.071563,
+      "cagr": 0.166216,
+      "vol": 0.558683,
+      "sharpe": 0.562922,
+      "sortino": 0.880493,
+      "max_drawdown": -0.660491,
+      "win_rate": 0.433043,
+      "profit_factor_daily": 1.10681,
+      "n_days": 1150,
+      "calmar": 0.251656,
+      "is": {
+        "total_return": -0.388049,
+        "cagr": -0.151481,
+        "vol": 0.466883,
+        "sharpe": -0.133752,
+        "sortino": -0.206721,
+        "max_drawdown": -0.660491,
+        "win_rate": 0.384298,
+        "profit_factor_daily": 0.975632,
+        "n_days": 726,
+        "calmar": -0.229347
+      },
+      "oos": {
+        "total_return": 2.385179,
+        "cagr": 1.014349,
+        "vol": 0.686734,
+        "sharpe": 1.397803,
+        "sortino": 2.271021,
+        "max_drawdown": -0.542373,
+        "win_rate": 0.516509,
+        "profit_factor_daily": 1.266774,
+        "n_days": 424,
+        "calmar": 1.870207
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.566889,
+          "cagr": -0.572142,
+          "vol": 0.331907,
+          "sharpe": -2.454184,
+          "sortino": -2.955296,
+          "max_drawdown": -0.588114,
+          "win_rate": 0.247934,
+          "profit_factor_daily": 0.60012,
+          "n_days": 242,
+          "calmar": -0.972843
+        },
+        "2023": {
+          "total_return": 0.076964,
+          "cagr": 0.078129,
+          "vol": 0.496358,
+          "sharpe": 0.402707,
+          "sortino": 0.615947,
+          "max_drawdown": -0.310405,
+          "win_rate": 0.458678,
+          "profit_factor_daily": 1.07067,
+          "n_days": 242,
+          "calmar": 0.251699
+        },
+        "2024": {
+          "total_return": 0.311948,
+          "cagr": 0.313172,
+          "vol": 0.543811,
+          "sharpe": 0.785816,
+          "sortino": 1.422822,
+          "max_drawdown": -0.323861,
+          "win_rate": 0.446281,
+          "profit_factor_daily": 1.15141,
+          "n_days": 242,
+          "calmar": 0.966994
+        },
+        "2025": {
+          "total_return": 0.579521,
+          "cagr": 0.584003,
+          "vol": 0.640645,
+          "sharpe": 1.057195,
+          "sortino": 1.736353,
+          "max_drawdown": -0.413432,
+          "win_rate": 0.473251,
+          "profit_factor_daily": 1.205439,
+          "n_days": 243,
+          "calmar": 1.412571
+        },
+        "2026": {
+          "total_return": 1.143168,
+          "cagr": 1.826101,
+          "vol": 0.745299,
+          "sharpe": 1.797083,
+          "sortino": 2.992006,
+          "max_drawdown": -0.542373,
+          "win_rate": 0.574586,
+          "profit_factor_daily": 1.334591,
+          "n_days": 181,
+          "calmar": 3.366876
+        }
+      },
+      "avg_exposure": 0.887536,
+      "pct_days_invested": 0.889565,
+      "ann_turnover": 9.641739,
+      "avg_weight_top3": [
+        {
+          "code": "300476",
+          "avg_weight": 0.113333
+        },
+        {
+          "code": "002463",
+          "avg_weight": 0.071014
+        },
+        {
+          "code": "688519",
+          "avg_weight": 0.067536
+        }
+      ],
+      "max_avg_weight": 0.113333,
+      "tracking_error": 0.331785,
+      "info_ratio_vs_bench": -0.301773,
+      "corr_vs_bench": 0.805136
+    },
+    "BREAK": {
+      "total_return": -0.593583,
+      "cagr": -0.173118,
+      "vol": 0.517714,
+      "sharpe": -0.124793,
+      "sortino": -0.191662,
+      "max_drawdown": -0.76902,
+      "win_rate": 0.395652,
+      "profit_factor_daily": 0.977137,
+      "n_days": 1150,
+      "calmar": -0.225116,
+      "is": {
+        "total_return": -0.669012,
+        "cagr": -0.309143,
+        "vol": 0.482234,
+        "sharpe": -0.557107,
+        "sortino": -0.849614,
+        "max_drawdown": -0.76902,
+        "win_rate": 0.369146,
+        "profit_factor_daily": 0.899508,
+        "n_days": 726,
+        "calmar": -0.401997
+      },
+      "oos": {
+        "total_return": 0.227889,
+        "cagr": 0.125132,
+        "vol": 0.573324,
+        "sharpe": 0.496715,
+        "sortino": 0.773039,
+        "max_drawdown": -0.462872,
+        "win_rate": 0.441038,
+        "profit_factor_daily": 1.092253,
+        "n_days": 424,
+        "calmar": 0.270338
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.466392,
+          "cagr": -0.471257,
+          "vol": 0.368195,
+          "sharpe": -1.589877,
+          "sortino": -1.974514,
+          "max_drawdown": -0.464085,
+          "win_rate": 0.268595,
+          "profit_factor_daily": 0.723411,
+          "n_days": 242,
+          "calmar": -1.015456
+        },
+        "2023": {
+          "total_return": -0.366924,
+          "cagr": -0.371131,
+          "vol": 0.428656,
+          "sharpe": -0.896965,
+          "sortino": -1.302375,
+          "max_drawdown": -0.514721,
+          "win_rate": 0.404959,
+          "profit_factor_daily": 0.847907,
+          "n_days": 242,
+          "calmar": -0.721033
+        },
+        "2024": {
+          "total_return": -0.020207,
+          "cagr": -0.020275,
+          "vol": 0.615684,
+          "sharpe": 0.266219,
+          "sortino": 0.476047,
+          "max_drawdown": -0.36606,
+          "win_rate": 0.433884,
+          "profit_factor_daily": 1.048554,
+          "n_days": 242,
+          "calmar": -0.055388
+        },
+        "2025": {
+          "total_return": 0.243717,
+          "cagr": 0.245399,
+          "vol": 0.566674,
+          "sharpe": 0.676825,
+          "sortino": 1.138672,
+          "max_drawdown": -0.382101,
+          "win_rate": 0.415638,
+          "profit_factor_daily": 1.132419,
+          "n_days": 243,
+          "calmar": 0.642236
+        },
+        "2026": {
+          "total_return": -0.012726,
+          "cagr": -0.017304,
+          "vol": 0.583607,
+          "sharpe": 0.260774,
+          "sortino": 0.374929,
+          "max_drawdown": -0.449004,
+          "win_rate": 0.475138,
+          "profit_factor_daily": 1.045528,
+          "n_days": 181,
+          "calmar": -0.038539
+        }
+      },
+      "avg_exposure": 0.840145,
+      "pct_days_invested": 0.852174,
+      "ann_turnover": 45.36,
+      "avg_weight_top3": [
+        {
+          "code": "002463",
+          "avg_weight": 0.069783
+        },
+        {
+          "code": "600183",
+          "avg_weight": 0.05779
+        },
+        {
+          "code": "300476",
+          "avg_weight": 0.048696
+        }
+      ],
+      "max_avg_weight": 0.069783,
+      "tracking_error": 0.369702,
+      "info_ratio_vs_bench": -1.29625,
+      "corr_vs_bench": 0.711102
+    },
+    "REV": {
+      "total_return": 1.655196,
+      "cagr": 0.228962,
+      "vol": 0.465917,
+      "sharpe": 0.691127,
+      "sortino": 1.103348,
+      "max_drawdown": -0.499939,
+      "win_rate": 0.453043,
+      "profit_factor_daily": 1.12877,
+      "n_days": 1150,
+      "calmar": 0.457979,
+      "is": {
+        "total_return": -0.146306,
+        "cagr": -0.051533,
+        "vol": 0.39936,
+        "sharpe": 0.061098,
+        "sortino": 0.093229,
+        "max_drawdown": -0.476503,
+        "win_rate": 0.42011,
+        "profit_factor_daily": 1.011113,
+        "n_days": 726,
+        "calmar": -0.108149
+      },
+      "oos": {
+        "total_return": 2.110244,
+        "cagr": 0.918705,
+        "vol": 0.560949,
+        "sharpe": 1.482473,
+        "sortino": 2.530485,
+        "max_drawdown": -0.499939,
+        "win_rate": 0.509434,
+        "profit_factor_daily": 1.275095,
+        "n_days": 424,
+        "calmar": 1.837634
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.464181,
+          "cagr": -0.469034,
+          "vol": 0.282597,
+          "sharpe": -2.15507,
+          "sortino": -2.483603,
+          "max_drawdown": -0.476503,
+          "win_rate": 0.219008,
+          "profit_factor_daily": 0.615567,
+          "n_days": 242,
+          "calmar": -0.984326
+        },
+        "2023": {
+          "total_return": 0.497126,
+          "cagr": 0.505963,
+          "vol": 0.407426,
+          "sharpe": 1.233793,
+          "sortino": 2.226633,
+          "max_drawdown": -0.222991,
+          "win_rate": 0.549587,
+          "profit_factor_daily": 1.223262,
+          "n_days": 242,
+          "calmar": 2.268978
+        },
+        "2024": {
+          "total_return": 0.064206,
+          "cagr": 0.064433,
+          "vol": 0.480962,
+          "sharpe": 0.373289,
+          "sortino": 0.6001,
+          "max_drawdown": -0.344553,
+          "win_rate": 0.491736,
+          "profit_factor_daily": 1.065258,
+          "n_days": 242,
+          "calmar": 0.187005
+        },
+        "2025": {
+          "total_return": 0.856354,
+          "cagr": 0.863485,
+          "vol": 0.495605,
+          "sharpe": 1.540698,
+          "sortino": 2.747468,
+          "max_drawdown": -0.304761,
+          "win_rate": 0.502058,
+          "profit_factor_daily": 1.295545,
+          "n_days": 243,
+          "calmar": 2.833321
+        },
+        "2026": {
+          "total_return": 0.675459,
+          "cagr": 1.020533,
+          "vol": 0.639668,
+          "sharpe": 1.442789,
+          "sortino": 2.470808,
+          "max_drawdown": -0.499939,
+          "win_rate": 0.519337,
+          "profit_factor_daily": 1.25546,
+          "n_days": 181,
+          "calmar": 2.041315
+        }
+      },
+      "avg_exposure": 0.892754,
+      "pct_days_invested": 0.893913,
+      "ann_turnover": 65.118261,
+      "avg_weight_top3": [
+        {
+          "code": "002463",
+          "avg_weight": 0.063732
+        },
+        {
+          "code": "300476",
+          "avg_weight": 0.053261
+        },
+        {
+          "code": "300814",
+          "avg_weight": 0.051884
+        }
+      ],
+      "max_avg_weight": 0.063732,
+      "tracking_error": 0.258101,
+      "info_ratio_vs_bench": -0.358815,
+      "corr_vs_bench": 0.837548
+    },
+    "LOWVOL": {
+      "total_return": 0.367768,
+      "cagr": 0.068356,
+      "vol": 0.421441,
+      "sharpe": 0.37319,
+      "sortino": 0.571657,
+      "max_drawdown": -0.71444,
+      "win_rate": 0.46087,
+      "profit_factor_daily": 1.066941,
+      "n_days": 1150,
+      "calmar": 0.095678,
+      "is": {
+        "total_return": -0.451768,
+        "cagr": -0.182121,
+        "vol": 0.378357,
+        "sharpe": -0.36312,
+        "sortino": -0.573964,
+        "max_drawdown": -0.71444,
+        "win_rate": 0.411846,
+        "profit_factor_daily": 0.938197,
+        "n_days": 726,
+        "calmar": -0.254914
+      },
+      "oos": {
+        "total_return": 1.494873,
+        "cagr": 0.690526,
+        "vol": 0.485272,
+        "sharpe": 1.363821,
+        "sortino": 2.023171,
+        "max_drawdown": -0.452318,
+        "win_rate": 0.544811,
+        "profit_factor_daily": 1.257911,
+        "n_days": 424,
+        "calmar": 1.526639
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.558002,
+          "cagr": -0.563233,
+          "vol": 0.350647,
+          "sharpe": -2.245054,
+          "sortino": -3.258555,
+          "max_drawdown": -0.555247,
+          "win_rate": 0.338843,
+          "profit_factor_daily": 0.67795,
+          "n_days": 242,
+          "calmar": -1.014383
+        },
+        "2023": {
+          "total_return": -0.078057,
+          "cagr": -0.079149,
+          "vol": 0.266644,
+          "sharpe": -0.184162,
+          "sortino": -0.264356,
+          "max_drawdown": -0.198514,
+          "win_rate": 0.42562,
+          "profit_factor_daily": 0.968684,
+          "n_days": 242,
+          "calmar": -0.398709
+        },
+        "2024": {
+          "total_return": 0.345363,
+          "cagr": 0.346734,
+          "vol": 0.48335,
+          "sharpe": 0.877546,
+          "sortino": 1.579877,
+          "max_drawdown": -0.295744,
+          "win_rate": 0.471074,
+          "profit_factor_daily": 1.159665,
+          "n_days": 242,
+          "calmar": 1.172414
+        },
+        "2025": {
+          "total_return": 0.793566,
+          "cagr": 0.800073,
+          "vol": 0.418722,
+          "sharpe": 1.657999,
+          "sortino": 2.438424,
+          "max_drawdown": -0.319272,
+          "win_rate": 0.54321,
+          "profit_factor_daily": 1.327383,
+          "n_days": 243,
+          "calmar": 2.505929
+        },
+        "2026": {
+          "total_return": 0.391012,
+          "cagr": 0.567985,
+          "vol": 0.56362,
+          "sharpe": 1.097023,
+          "sortino": 1.708979,
+          "max_drawdown": -0.452318,
+          "win_rate": 0.546961,
+          "profit_factor_daily": 1.195405,
+          "n_days": 181,
+          "calmar": 1.255721
+        }
+      },
+      "avg_exposure": 0.937609,
+      "pct_days_invested": 0.938261,
+      "ann_turnover": 12.271304,
+      "avg_weight_top3": [
+        {
+          "code": "603328",
+          "avg_weight": 0.119565
+        },
+        {
+          "code": "600183",
+          "avg_weight": 0.066957
+        },
+        {
+          "code": "002815",
+          "avg_weight": 0.063043
+        }
+      ],
+      "max_avg_weight": 0.119565,
+      "tracking_error": 0.218545,
+      "info_ratio_vs_bench": -1.177522,
+      "corr_vs_bench": 0.869438
+    },
+    "ROTATE": {
+      "total_return": 5.372919,
+      "cagr": 0.478488,
+      "vol": 0.508199,
+      "sharpe": 1.051369,
+      "sortino": 1.603627,
+      "max_drawdown": -0.530773,
+      "win_rate": 0.417391,
+      "profit_factor_daily": 1.214829,
+      "n_days": 1150,
+      "calmar": 0.901492,
+      "is": {
+        "total_return": -0.049896,
+        "cagr": -0.016974,
+        "vol": 0.393631,
+        "sharpe": 0.150198,
+        "sortino": 0.219157,
+        "max_drawdown": -0.492774,
+        "win_rate": 0.360882,
+        "profit_factor_daily": 1.029664,
+        "n_days": 726,
+        "calmar": -0.034446
+      },
+      "oos": {
+        "total_return": 5.707605,
+        "cagr": 1.983263,
+        "vol": 0.657109,
+        "sharpe": 2.051323,
+        "sortino": 3.403306,
+        "max_drawdown": -0.530773,
+        "win_rate": 0.514151,
+        "profit_factor_daily": 1.40442,
+        "n_days": 424,
+        "calmar": 3.736555
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.316743,
+          "cagr": -0.320527,
+          "vol": 0.286308,
+          "sharpe": -1.241666,
+          "sortino": -1.563978,
+          "max_drawdown": -0.323656,
+          "win_rate": 0.22314,
+          "profit_factor_daily": 0.760229,
+          "n_days": 242,
+          "calmar": -0.990332
+        },
+        "2023": {
+          "total_return": 0.267229,
+          "cagr": 0.271614,
+          "vol": 0.417269,
+          "sharpe": 0.797749,
+          "sortino": 1.244064,
+          "max_drawdown": -0.277456,
+          "win_rate": 0.446281,
+          "profit_factor_daily": 1.156992,
+          "n_days": 242,
+          "calmar": 0.978942
+        },
+        "2024": {
+          "total_return": 0.097315,
+          "cagr": 0.097665,
+          "vol": 0.457137,
+          "sharpe": 0.437488,
+          "sortino": 0.670336,
+          "max_drawdown": -0.323087,
+          "win_rate": 0.413223,
+          "profit_factor_daily": 1.084163,
+          "n_days": 242,
+          "calmar": 0.302288
+        },
+        "2025": {
+          "total_return": 1.267297,
+          "cagr": 1.278831,
+          "vol": 0.568488,
+          "sharpe": 1.776273,
+          "sortino": 3.048668,
+          "max_drawdown": -0.347559,
+          "win_rate": 0.510288,
+          "profit_factor_daily": 1.352749,
+          "n_days": 243,
+          "calmar": 3.67946
+        },
+        "2026": {
+          "total_return": 1.958415,
+          "cagr": 3.385243,
+          "vol": 0.760776,
+          "sharpe": 2.368536,
+          "sortino": 3.931954,
+          "max_drawdown": -0.530773,
+          "win_rate": 0.519337,
+          "profit_factor_daily": 1.45451,
+          "n_days": 181,
+          "calmar": 6.37795
+        }
+      },
+      "avg_exposure": 0.831261,
+      "pct_days_invested": 0.833043,
+      "ann_turnover": 10.452522,
+      "avg_weight_top3": [
+        {
+          "code": "600183",
+          "avg_weight": 0.113913
+        },
+        {
+          "code": "603186",
+          "avg_weight": 0.113913
+        },
+        {
+          "code": "002636",
+          "avg_weight": 0.070072
+        }
+      ],
+      "max_avg_weight": 0.113913,
+      "tracking_error": 0.312253,
+      "info_ratio_vs_bench": 0.383299,
+      "corr_vs_bench": 0.791281
+    },
+    "RESID": {
+      "total_return": 0.873384,
+      "cagr": 0.141718,
+      "vol": 0.439561,
+      "sharpe": 0.532901,
+      "sortino": 0.785578,
+      "max_drawdown": -0.531837,
+      "win_rate": 0.416522,
+      "profit_factor_daily": 1.100813,
+      "n_days": 1150,
+      "calmar": 0.266469,
+      "is": {
+        "total_return": 0.006339,
+        "cagr": 0.002116,
+        "vol": 0.374847,
+        "sharpe": 0.191791,
+        "sortino": 0.294054,
+        "max_drawdown": -0.358709,
+        "win_rate": 0.378788,
+        "profit_factor_daily": 1.036366,
+        "n_days": 726,
+        "calmar": 0.005899
+      },
+      "oos": {
+        "total_return": 0.861582,
+        "cagr": 0.428865,
+        "vol": 0.532462,
+        "sharpe": 0.962001,
+        "sortino": 1.426838,
+        "max_drawdown": -0.531837,
+        "win_rate": 0.481132,
+        "profit_factor_daily": 1.175597,
+        "n_days": 424,
+        "calmar": 0.806385
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.259717,
+          "cagr": -0.262957,
+          "vol": 0.303277,
+          "sharpe": -0.880806,
+          "sortino": -1.180776,
+          "max_drawdown": -0.290172,
+          "win_rate": 0.268595,
+          "profit_factor_daily": 0.838909,
+          "n_days": 242,
+          "calmar": -0.906209
+        },
+        "2023": {
+          "total_return": 0.04643,
+          "cagr": 0.047123,
+          "vol": 0.373549,
+          "sharpe": 0.311413,
+          "sortino": 0.514308,
+          "max_drawdown": -0.358709,
+          "win_rate": 0.458678,
+          "profit_factor_daily": 1.055374,
+          "n_days": 242,
+          "calmar": 0.131368
+        },
+        "2024": {
+          "total_return": 0.299082,
+          "cagr": 0.30025,
+          "vol": 0.436312,
+          "sharpe": 0.839942,
+          "sortino": 1.323685,
+          "max_drawdown": -0.297944,
+          "win_rate": 0.409091,
+          "profit_factor_daily": 1.168754,
+          "n_days": 242,
+          "calmar": 1.007741
+        },
+        "2025": {
+          "total_return": 0.901586,
+          "cagr": 0.909176,
+          "vol": 0.506158,
+          "sharpe": 1.573086,
+          "sortino": 2.333074,
+          "max_drawdown": -0.327801,
+          "win_rate": 0.485597,
+          "profit_factor_daily": 1.311175,
+          "n_days": 243,
+          "calmar": 2.773565
+        },
+        "2026": {
+          "total_return": -0.021037,
+          "cagr": -0.028561,
+          "vol": 0.566401,
+          "sharpe": 0.231191,
+          "sortino": 0.350245,
+          "max_drawdown": -0.531837,
+          "win_rate": 0.475138,
+          "profit_factor_daily": 1.038535,
+          "n_days": 181,
+          "calmar": -0.053702
+        }
+      },
+      "avg_exposure": 0.853333,
+      "pct_days_invested": 0.856522,
+      "ann_turnover": 59.530435,
+      "avg_weight_top3": [
+        {
+          "code": "002463",
+          "avg_weight": 0.046159
+        },
+        {
+          "code": "603186",
+          "avg_weight": 0.04442
+        },
+        {
+          "code": "300476",
+          "avg_weight": 0.043116
+        }
+      ],
+      "max_avg_weight": 0.046159,
+      "tracking_error": 0.275975,
+      "info_ratio_vs_bench": -0.653595,
+      "corr_vs_bench": 0.79996
+    },
+    "SECTOR_MA": {
+      "total_return": 3.890424,
+      "cagr": 0.398105,
+      "vol": 0.373437,
+      "sharpe": 1.118217,
+      "sortino": 1.448692,
+      "max_drawdown": -0.434016,
+      "win_rate": 0.348696,
+      "profit_factor_daily": 1.255556,
+      "n_days": 1150,
+      "calmar": 0.917259,
+      "is": {
+        "total_return": 0.178763,
+        "cagr": 0.056551,
+        "vol": 0.274608,
+        "sharpe": 0.344013,
+        "sortino": 0.396585,
+        "max_drawdown": -0.233673,
+        "win_rate": 0.238292,
+        "profit_factor_daily": 1.08673,
+        "n_days": 726,
+        "calmar": 0.24201
+      },
+      "oos": {
+        "total_return": 3.148776,
+        "cagr": 1.26395,
+        "vol": 0.497622,
+        "sharpe": 1.950963,
+        "sortino": 2.995544,
+        "max_drawdown": -0.434016,
+        "win_rate": 0.537736,
+        "profit_factor_daily": 1.378223,
+        "n_days": 424,
+        "calmar": 2.912221
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.130851,
+          "cagr": -0.132627,
+          "vol": 0.119971,
+          "sharpe": -1.156649,
+          "sortino": -0.682631,
+          "max_drawdown": -0.16025,
+          "win_rate": 0.057851,
+          "profit_factor_daily": 0.625124,
+          "n_days": 242,
+          "calmar": -0.827621
+        },
+        "2023": {
+          "total_return": 0.038234,
+          "cagr": 0.038802,
+          "vol": 0.284644,
+          "sharpe": 0.279095,
+          "sortino": 0.380032,
+          "max_drawdown": -0.218753,
+          "win_rate": 0.35124,
+          "profit_factor_daily": 1.053894,
+          "n_days": 242,
+          "calmar": 0.17738
+        },
+        "2024": {
+          "total_return": 0.306282,
+          "cagr": 0.307481,
+          "vol": 0.361905,
+          "sharpe": 0.947008,
+          "sortino": 1.232185,
+          "max_drawdown": -0.21381,
+          "win_rate": 0.305785,
+          "profit_factor_daily": 1.240771,
+          "n_days": 242,
+          "calmar": 1.438101
+        },
+        "2025": {
+          "total_return": 1.134239,
+          "cagr": 1.144292,
+          "vol": 0.436212,
+          "sharpe": 2.023107,
+          "sortino": 3.036684,
+          "max_drawdown": -0.303737,
+          "win_rate": 0.518519,
+          "profit_factor_daily": 1.410015,
+          "n_days": 243,
+          "calmar": 3.767375
+        },
+        "2026": {
+          "total_return": 0.943913,
+          "cagr": 1.474172,
+          "vol": 0.570969,
+          "sharpe": 1.908058,
+          "sortino": 3.149037,
+          "max_drawdown": -0.434016,
+          "win_rate": 0.563536,
+          "profit_factor_daily": 1.34881,
+          "n_days": 181,
+          "calmar": 3.396587
+        }
+      },
+      "avg_exposure": 0.669544,
+      "pct_days_invested": 0.669565,
+      "ann_turnover": 2.122345,
+      "avg_weight_top3": [
+        {
+          "code": "002938",
+          "avg_weight": 0.02607
+        },
+        {
+          "code": "300476",
+          "avg_weight": 0.02607
+        },
+        {
+          "code": "002916",
+          "avg_weight": 0.02607
+        }
+      ],
+      "max_avg_weight": 0.02607,
+      "tracking_error": 0.218755,
+      "info_ratio_vs_bench": 0.013556,
+      "corr_vs_bench": 0.86288
+    },
+    "BENCH_EW_LIQ": {
+      "total_return": 3.325595,
+      "cagr": 0.362343,
+      "vol": 0.432829,
+      "sharpe": 0.957928,
+      "sortino": 1.515545,
+      "max_drawdown": -0.471809,
+      "win_rate": 0.506087,
+      "profit_factor_daily": 1.173355,
+      "n_days": 1150,
+      "calmar": 0.767988,
+      "is": {
+        "total_return": 0.04262,
+        "cagr": 0.014058,
+        "vol": 0.388957,
+        "sharpe": 0.2308,
+        "sortino": 0.374174,
+        "max_drawdown": -0.471809,
+        "win_rate": 0.487603,
+        "profit_factor_daily": 1.039211,
+        "n_days": 726,
+        "calmar": 0.029796
+      },
+      "oos": {
+        "total_return": 3.148776,
+        "cagr": 1.26395,
+        "vol": 0.497622,
+        "sharpe": 1.950963,
+        "sortino": 2.995544,
+        "max_drawdown": -0.434016,
+        "win_rate": 0.537736,
+        "profit_factor_daily": 1.378223,
+        "n_days": 424,
+        "calmar": 2.912221
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.351292,
+          "cagr": -0.355373,
+          "vol": 0.351434,
+          "sharpe": -1.105872,
+          "sortino": -1.753366,
+          "max_drawdown": -0.454237,
+          "win_rate": 0.433884,
+          "profit_factor_daily": 0.834948,
+          "n_days": 242,
+          "calmar": -0.782352
+        },
+        "2023": {
+          "total_return": 0.230261,
+          "cagr": 0.233985,
+          "vol": 0.326947,
+          "sharpe": 0.823068,
+          "sortino": 1.371366,
+          "max_drawdown": -0.212659,
+          "win_rate": 0.512397,
+          "profit_factor_daily": 1.137742,
+          "n_days": 242,
+          "calmar": 1.10028
+        },
+        "2024": {
+          "total_return": 0.306409,
+          "cagr": 0.307609,
+          "vol": 0.472568,
+          "sharpe": 0.822855,
+          "sortino": 1.344779,
+          "max_drawdown": -0.330777,
+          "win_rate": 0.516529,
+          "profit_factor_daily": 1.151893,
+          "n_days": 242,
+          "calmar": 0.92996
+        },
+        "2025": {
+          "total_return": 1.134239,
+          "cagr": 1.144292,
+          "vol": 0.436212,
+          "sharpe": 2.023107,
+          "sortino": 3.036684,
+          "max_drawdown": -0.303737,
+          "win_rate": 0.518519,
+          "profit_factor_daily": 1.410015,
+          "n_days": 243,
+          "calmar": 3.767375
+        },
+        "2026": {
+          "total_return": 0.943913,
+          "cagr": 1.474172,
+          "vol": 0.570969,
+          "sharpe": 1.908058,
+          "sortino": 3.149037,
+          "max_drawdown": -0.434016,
+          "win_rate": 0.563536,
+          "profit_factor_daily": 1.34881,
+          "n_days": 181,
+          "calmar": 3.396587
+        }
+      },
+      "avg_exposure": 0.999959,
+      "pct_days_invested": 1.0,
+      "ann_turnover": 2.297243,
+      "avg_weight_top3": [
+        {
+          "code": "002938",
+          "avg_weight": 0.04451
+        },
+        {
+          "code": "300476",
+          "avg_weight": 0.04451
+        },
+        {
+          "code": "002916",
+          "avg_weight": 0.04451
+        }
+      ],
+      "max_avg_weight": 0.04451,
+      "tracking_error": null,
+      "info_ratio_vs_bench": 0.0,
+      "corr_vs_bench": 1.0
+    },
+    "CHINEXT": {
+      "total_return": -0.036793,
+      "cagr": -0.007883,
+      "vol": 0.308393,
+      "sharpe": 0.125931,
+      "sortino": 0.200881,
+      "max_drawdown": -0.529097,
+      "win_rate": 0.467826,
+      "profit_factor_daily": 1.023121,
+      "n_days": 1150,
+      "calmar": -0.014899,
+      "is": {
+        "total_return": -0.342067,
+        "cagr": -0.130668,
+        "vol": 0.29862,
+        "sharpe": -0.340717,
+        "sortino": -0.622421,
+        "max_drawdown": -0.529097,
+        "win_rate": 0.436639,
+        "profit_factor_daily": 0.937923,
+        "n_days": 726,
+        "calmar": -0.246964
+      },
+      "oos": {
+        "total_return": 0.46399,
+        "cagr": 0.244707,
+        "vol": 0.324243,
+        "sharpe": 0.862158,
+        "sortino": 1.164719,
+        "max_drawdown": -0.282871,
+        "win_rate": 0.521226,
+        "profit_factor_daily": 1.159805,
+        "n_days": 424,
+        "calmar": 0.865084
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.279036,
+          "cagr": -0.282467,
+          "vol": 0.28107,
+          "sharpe": -1.071473,
+          "sortino": -1.801609,
+          "max_drawdown": -0.338337,
+          "win_rate": 0.446281,
+          "profit_factor_daily": 0.84017,
+          "n_days": 242,
+          "calmar": -0.834869
+        },
+        "2023": {
+          "total_return": -0.194054,
+          "cagr": -0.196586,
+          "vol": 0.177557,
+          "sharpe": -1.176557,
+          "sortino": -2.267327,
+          "max_drawdown": -0.310269,
+          "win_rate": 0.42562,
+          "profit_factor_daily": 0.830324,
+          "n_days": 242,
+          "calmar": -0.633597
+        },
+        "2024": {
+          "total_return": 0.132301,
+          "cagr": 0.132784,
+          "vol": 0.39643,
+          "sharpe": 0.516685,
+          "sortino": 1.013514,
+          "max_drawdown": -0.205508,
+          "win_rate": 0.438017,
+          "profit_factor_daily": 1.113692,
+          "n_days": 242,
+          "calmar": 0.646128
+        },
+        "2025": {
+          "total_return": 0.49569,
+          "cagr": 0.499427,
+          "vol": 0.293797,
+          "sharpe": 1.570649,
+          "sortino": 1.975714,
+          "max_drawdown": -0.207889,
+          "win_rate": 0.539095,
+          "profit_factor_daily": 1.32135,
+          "n_days": 243,
+          "calmar": 2.402378
+        },
+        "2026": {
+          "total_return": -0.021195,
+          "cagr": -0.028774,
+          "vol": 0.361387,
+          "sharpe": 0.097779,
+          "sortino": 0.145693,
+          "max_drawdown": -0.282871,
+          "win_rate": 0.497238,
+          "profit_factor_daily": 1.016284,
+          "n_days": 181,
+          "calmar": -0.101721
+        }
+      },
+      "avg_exposure": 1.0,
+      "pct_days_invested": 1.0,
+      "ann_turnover": 0.0,
+      "avg_weight_top3": [
+        {
+          "code": "000823",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "001389",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "002384",
+          "avg_weight": 0.0
+        }
+      ],
+      "max_avg_weight": 0.0,
+      "tracking_error": 0.288891,
+      "info_ratio_vs_bench": -1.300775,
+      "corr_vs_bench": 0.745381
+    },
+    "HS300": {
+      "total_return": -0.115232,
+      "cagr": -0.025517,
+      "vol": 0.181022,
+      "sharpe": -0.057824,
+      "sortino": -0.085096,
+      "max_drawdown": -0.357585,
+      "win_rate": 0.488696,
+      "profit_factor_daily": 0.989777,
+      "n_days": 1150,
+      "calmar": -0.07136,
+      "is": {
+        "total_return": -0.201059,
+        "cagr": -0.07233,
+        "vol": 0.187642,
+        "sharpe": -0.321854,
+        "sortino": -0.513912,
+        "max_drawdown": -0.357585,
+        "win_rate": 0.464187,
+        "profit_factor_daily": 0.943981,
+        "n_days": 726,
+        "calmar": -0.202275
+      },
+      "oos": {
+        "total_return": 0.107426,
+        "cagr": 0.060351,
+        "vol": 0.169167,
+        "sharpe": 0.443461,
+        "sortino": 0.562408,
+        "max_drawdown": -0.142085,
+        "win_rate": 0.53066,
+        "profit_factor_daily": 1.080572,
+        "n_days": 424,
+        "calmar": 0.424751
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.213907,
+          "cagr": -0.216662,
+          "vol": 0.204022,
+          "sharpe": -1.126066,
+          "sortino": -1.703014,
+          "max_drawdown": -0.286526,
+          "win_rate": 0.458678,
+          "profit_factor_daily": 0.827884,
+          "n_days": 242,
+          "calmar": -0.756167
+        },
+        "2023": {
+          "total_return": -0.113782,
+          "cagr": -0.115341,
+          "vol": 0.135011,
+          "sharpe": -0.864294,
+          "sortino": -1.544292,
+          "max_drawdown": -0.215133,
+          "win_rate": 0.442149,
+          "profit_factor_daily": 0.870552,
+          "n_days": 242,
+          "calmar": -0.536139
+        },
+        "2024": {
+          "total_return": 0.146833,
+          "cagr": 0.147373,
+          "vol": 0.213864,
+          "sharpe": 0.772693,
+          "sortino": 1.27945,
+          "max_drawdown": -0.144057,
+          "win_rate": 0.491736,
+          "profit_factor_daily": 1.165576,
+          "n_days": 242,
+          "calmar": 1.023014
+        },
+        "2025": {
+          "total_return": 0.176632,
+          "cagr": 0.177819,
+          "vol": 0.152645,
+          "sharpe": 1.182247,
+          "sortino": 1.357773,
+          "max_drawdown": -0.104916,
+          "win_rate": 0.555556,
+          "profit_factor_daily": 1.241145,
+          "n_days": 243,
+          "calmar": 1.694871
+        },
+        "2026": {
+          "total_return": -0.058817,
+          "cagr": -0.079294,
+          "vol": 0.18917,
+          "sharpe": -0.351776,
+          "sortino": -0.507343,
+          "max_drawdown": -0.142085,
+          "win_rate": 0.497238,
+          "profit_factor_daily": 0.943432,
+          "n_days": 181,
+          "calmar": -0.558076
+        }
+      },
+      "avg_exposure": 1.0,
+      "pct_days_invested": 1.0,
+      "ann_turnover": 0.0,
+      "avg_weight_top3": [
+        {
+          "code": "000823",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "001389",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "002384",
+          "avg_weight": 0.0
+        }
+      ],
+      "max_avg_weight": 0.0,
+      "tracking_error": 0.34515,
+      "info_ratio_vs_bench": -1.231599,
+      "corr_vs_bench": 0.644412
+    },
+    "SHCOMP": {
+      "total_return": 0.056189,
+      "cagr": 0.011609,
+      "vol": 0.159981,
+      "sharpe": 0.154977,
+      "sortino": 0.20432,
+      "max_drawdown": -0.256073,
+      "win_rate": 0.51913,
+      "profit_factor_daily": 1.028647,
+      "n_days": 1150,
+      "calmar": 0.045333,
+      "is": {
+        "total_return": -0.078627,
+        "cagr": -0.027019,
+        "vol": 0.168795,
+        "sharpe": -0.08422,
+        "sortino": -0.121024,
+        "max_drawdown": -0.256073,
+        "win_rate": 0.493113,
+        "profit_factor_daily": 0.984757,
+        "n_days": 726,
+        "calmar": -0.105512
+      },
+      "oos": {
+        "total_return": 0.14632,
+        "cagr": 0.081581,
+        "vol": 0.143733,
+        "sharpe": 0.637207,
+        "sortino": 0.710524,
+        "max_drawdown": -0.112767,
+        "win_rate": 0.563679,
+        "profit_factor_daily": 1.122027,
+        "n_days": 424,
+        "calmar": 0.723448
+      },
+      "yearly": {
+        "2022": {
+          "total_return": -0.150786,
+          "cagr": -0.152808,
+          "vol": 0.178834,
+          "sharpe": -0.861836,
+          "sortino": -1.114022,
+          "max_drawdown": -0.20535,
+          "win_rate": 0.479339,
+          "profit_factor_daily": 0.860076,
+          "n_days": 242,
+          "calmar": -0.744131
+        },
+        "2023": {
+          "total_return": -0.037009,
+          "cagr": -0.037538,
+          "vol": 0.115794,
+          "sharpe": -0.281456,
+          "sortino": -0.461072,
+          "max_drawdown": -0.146133,
+          "win_rate": 0.487603,
+          "profit_factor_daily": 0.955656,
+          "n_days": 242,
+          "calmar": -0.256879
+        },
+        "2024": {
+          "total_return": 0.126669,
+          "cagr": 0.12713,
+          "vol": 0.200358,
+          "sharpe": 0.719054,
+          "sortino": 1.121818,
+          "max_drawdown": -0.147284,
+          "win_rate": 0.512397,
+          "profit_factor_daily": 1.149853,
+          "n_days": 242,
+          "calmar": 0.863162
+        },
+        "2025": {
+          "total_return": 0.184106,
+          "cagr": 0.185347,
+          "vol": 0.135378,
+          "sharpe": 1.363481,
+          "sortino": 1.371217,
+          "max_drawdown": -0.097144,
+          "win_rate": 0.572016,
+          "profit_factor_daily": 1.301,
+          "n_days": 243,
+          "calmar": 1.907967
+        },
+        "2026": {
+          "total_return": -0.031911,
+          "cagr": -0.043237,
+          "vol": 0.154275,
+          "sharpe": -0.215627,
+          "sortino": -0.282029,
+          "max_drawdown": -0.112767,
+          "win_rate": 0.552486,
+          "profit_factor_daily": 0.964418,
+          "n_days": 181,
+          "calmar": -0.383422
+        }
+      },
+      "avg_exposure": 1.0,
+      "pct_days_invested": 1.0,
+      "ann_turnover": 0.0,
+      "avg_weight_top3": [
+        {
+          "code": "000823",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "001389",
+          "avg_weight": 0.0
+        },
+        {
+          "code": "002384",
+          "avg_weight": 0.0
+        }
+      ],
+      "max_avg_weight": 0.0,
+      "tracking_error": 0.350056,
+      "info_ratio_vs_bench": -1.113608,
+      "corr_vs_bench": 0.652728
+    }
+  },
+  "flags": {
+    "XSMOM": {
+      "beat_bench_total": true,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": true,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "DUAL": {
+      "beat_bench_total": false,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": false,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "BREAK": {
+      "beat_bench_total": false,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": false,
+      "oos_positive": true,
+      "is_positive": false,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "REV": {
+      "beat_bench_total": false,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": false,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "LOWVOL": {
+      "beat_bench_total": false,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": false,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "ROTATE": {
+      "beat_bench_total": true,
+      "sharpe_gt_1": true,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": false,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "RESID": {
+      "beat_bench_total": false,
+      "sharpe_gt_1": false,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": true,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    },
+    "SECTOR_MA": {
+      "beat_bench_total": true,
+      "sharpe_gt_1": true,
+      "oos_sharpe_gt_0_5": true,
+      "oos_positive": true,
+      "is_positive": true,
+      "mdd_within_30": false,
+      "not_one_name": true,
+      "invested_enough": true,
+      "passes_quality_bar": false
+    }
+  },
+  "sensitivity": {
+    "XSMOM": {
+      "lb60_n4": {
+        "sharpe": 1.014145,
+        "oos_sharpe": 1.799594,
+        "max_drawdown": -0.556551,
+        "total_return": 5.36483,
+        "cagr": 0.478091
+      },
+      "lb120_n4": {
+        "sharpe": 0.89912,
+        "oos_sharpe": 1.589557,
+        "max_drawdown": -0.562541,
+        "total_return": 3.901263,
+        "cagr": 0.398759
+      },
+      "lb180_n4": {
+        "sharpe": 0.778422,
+        "oos_sharpe": 1.562874,
+        "max_drawdown": -0.58734,
+        "total_return": 2.559684,
+        "cagr": 0.307428
+      },
+      "lb120_n3": {
+        "sharpe": 0.721969,
+        "oos_sharpe": 1.429085,
+        "max_drawdown": -0.593514,
+        "total_return": 2.156523,
+        "cagr": 0.274667
+      },
+      "lb120_n5": {
+        "sharpe": 0.87894,
+        "oos_sharpe": 1.663651,
+        "max_drawdown": -0.552769,
+        "total_return": 3.483807,
+        "cagr": 0.372715
+      },
+      "cost30bps": {
+        "sharpe": 0.876989,
+        "oos_sharpe": 1.570818,
+        "max_drawdown": -0.568135,
+        "total_return": 3.631604,
+        "cagr": 0.382146
+      }
+    },
+    "DUAL": {
+      "lb60": {
+        "sharpe": 0.730414,
+        "oos_sharpe": 1.546247,
+        "max_drawdown": -0.586825,
+        "total_return": 2.156193,
+        "cagr": 0.274638
+      },
+      "lb120": {
+        "sharpe": 0.562922,
+        "oos_sharpe": 1.397803,
+        "max_drawdown": -0.660491,
+        "total_return": 1.071563,
+        "cagr": 0.166216
+      },
+      "lb180": {
+        "sharpe": 0.608626,
+        "oos_sharpe": 1.504979,
+        "max_drawdown": -0.655812,
+        "total_return": 1.329453,
+        "cagr": 0.195466
+      },
+      "cost30bps": {
+        "sharpe": 0.536878,
+        "oos_sharpe": 1.374904,
+        "max_drawdown": -0.670297,
+        "total_return": 0.938462,
+        "cagr": 0.149979
+      }
+    },
+    "BREAK": {
+      "e10": {
+        "sharpe": -0.302936,
+        "oos_sharpe": 0.664049,
+        "max_drawdown": -0.842697,
+        "total_return": -0.72788,
+        "cagr": -0.240264
+      },
+      "e20": {
+        "sharpe": -0.124793,
+        "oos_sharpe": 0.496715,
+        "max_drawdown": -0.76902,
+        "total_return": -0.593583,
+        "cagr": -0.173118
+      },
+      "e55": {
+        "sharpe": 0.274651,
+        "oos_sharpe": 1.755739,
+        "max_drawdown": -0.800387,
+        "total_return": 0.021798,
+        "cagr": 0.004563
+      },
+      "cost30bps": {
+        "sharpe": -0.255502,
+        "oos_sharpe": 0.380158,
+        "max_drawdown": -0.799129,
+        "total_return": -0.70328,
+        "cagr": -0.226255
+      }
+    },
+    "REV": {
+      "lb3": {
+        "sharpe": 0.463011,
+        "oos_sharpe": 0.869228,
+        "max_drawdown": -0.562546,
+        "total_return": 0.632984,
+        "cagr": 0.109089
+      },
+      "lb5": {
+        "sharpe": 0.691127,
+        "oos_sharpe": 1.482473,
+        "max_drawdown": -0.499939,
+        "total_return": 1.655196,
+        "cagr": 0.228962
+      },
+      "lb10": {
+        "sharpe": 0.814486,
+        "oos_sharpe": 1.342045,
+        "max_drawdown": -0.501808,
+        "total_return": 2.399291,
+        "cagr": 0.294764
+      },
+      "cost30bps": {
+        "sharpe": 0.480484,
+        "oos_sharpe": 1.240889,
+        "max_drawdown": -0.506807,
+        "total_return": 0.696866,
+        "cagr": 0.118111
+      }
+    },
+    "LOWVOL": {
+      "v20": {
+        "sharpe": 0.538829,
+        "oos_sharpe": 1.45136,
+        "max_drawdown": -0.632631,
+        "total_return": 0.879868,
+        "cagr": 0.142551
+      },
+      "v60": {
+        "sharpe": 0.37319,
+        "oos_sharpe": 1.363821,
+        "max_drawdown": -0.71444,
+        "total_return": 0.367768,
+        "cagr": 0.068356
+      },
+      "v120": {
+        "sharpe": 0.530912,
+        "oos_sharpe": 1.314345,
+        "max_drawdown": -0.621443,
+        "total_return": 0.853778,
+        "cagr": 0.139185
+      },
+      "cost30bps": {
+        "sharpe": 0.329398,
+        "oos_sharpe": 1.325193,
+        "max_drawdown": -0.724608,
+        "total_return": 0.25718,
+        "cagr": 0.049507
+      }
+    },
+    "ROTATE": {
+      "lb20": {
+        "sharpe": 1.112069,
+        "oos_sharpe": 1.734854,
+        "max_drawdown": -0.5617,
+        "total_return": 5.761416,
+        "cagr": 0.497075
+      },
+      "lb60": {
+        "sharpe": 1.051369,
+        "oos_sharpe": 2.051323,
+        "max_drawdown": -0.530773,
+        "total_return": 5.372919,
+        "cagr": 0.478488
+      },
+      "lb120": {
+        "sharpe": 0.862825,
+        "oos_sharpe": 2.038666,
+        "max_drawdown": -0.702894,
+        "total_return": 3.280921,
+        "cagr": 0.359361
+      },
+      "cost30bps": {
+        "sharpe": 1.019593,
+        "oos_sharpe": 2.020222,
+        "max_drawdown": -0.530773,
+        "total_return": 4.926779,
+        "cagr": 0.456006
+      }
+    },
+    "SECTOR_MA": {
+      "ma120": {
+        "sharpe": 0.694316,
+        "oos_sharpe": 1.282157,
+        "max_drawdown": -0.446194,
+        "total_return": 1.35495,
+        "cagr": 0.198217
+      },
+      "ma200": {
+        "sharpe": 1.118217,
+        "oos_sharpe": 1.950963,
+        "max_drawdown": -0.434016,
+        "total_return": 3.890424,
+        "cagr": 0.398105
+      },
+      "cost30bps": {
+        "sharpe": 1.109862,
+        "oos_sharpe": 1.949827,
+        "max_drawdown": -0.434016,
+        "total_return": 3.82045,
+        "cagr": 0.393857
+      }
+    },
+    "RESID": {
+      "lb5": {
+        "sharpe": 0.496092,
+        "oos_sharpe": 0.804118,
+        "max_drawdown": -0.540965,
+        "total_return": 0.746081,
+        "cagr": 0.12488
+      },
+      "lb10": {
+        "sharpe": 0.532901,
+        "oos_sharpe": 0.962001,
+        "max_drawdown": -0.531837,
+        "total_return": 0.873384,
+        "cagr": 0.141718
+      },
+      "lb20": {
+        "sharpe": 0.31664,
+        "oos_sharpe": 0.716114,
+        "max_drawdown": -0.531446,
+        "total_return": 0.223228,
+        "cagr": 0.043458
+      },
+      "cost30bps": {
+        "sharpe": 0.329337,
+        "oos_sharpe": 0.765095,
+        "max_drawdown": -0.539624,
+        "total_return": 0.244936,
+        "cagr": 0.047341
+      }
+    }
+  },
+  "drop_leaders_002463_300476": {
+    "XSMOM": {
+      "sharpe": 0.70084,
+      "oos_sharpe": 1.475001,
+      "max_drawdown": -0.616376,
+      "total_return": 1.897212,
+      "cagr": 0.251805
+    },
+    "DUAL": {
+      "sharpe": 0.513734,
+      "oos_sharpe": 1.217889,
+      "max_drawdown": -0.693808,
+      "total_return": 0.828788,
+      "cagr": 0.135925
+    },
+    "BREAK": {
+      "sharpe": -0.379438,
+      "oos_sharpe": 0.216699,
+      "max_drawdown": -0.806601,
+      "total_return": -0.760173,
+      "cagr": -0.260259
+    },
+    "REV": {
+      "sharpe": 0.730057,
+      "oos_sharpe": 1.354041,
+      "max_drawdown": -0.516549,
+      "total_return": 1.799031,
+      "cagr": 0.242726
+    },
+    "LOWVOL": {
+      "sharpe": 0.242539,
+      "oos_sharpe": 1.40897,
+      "max_drawdown": -0.725597,
+      "total_return": 0.076042,
+      "cagr": 0.015594
+    },
+    "ROTATE": {
+      "sharpe": 0.765136,
+      "oos_sharpe": 1.817207,
+      "max_drawdown": -0.533006,
+      "total_return": 2.158634,
+      "cagr": 0.274846
+    },
+    "RESID": {
+      "sharpe": 0.425799,
+      "oos_sharpe": 1.026303,
+      "max_drawdown": -0.502378,
+      "total_return": 0.510087,
+      "cagr": 0.090918
+    },
+    "SECTOR_MA": {
+      "sharpe": 1.067695,
+      "oos_sharpe": 1.949392,
+      "max_drawdown": -0.434475,
+      "total_return": 3.375751,
+      "cagr": 0.365663
+    }
+  },
+  "corr": {
+    "XSMOM": {
+      "XSMOM": 1.0,
+      "DUAL": 0.926,
+      "BREAK": 0.649,
+      "REV": 0.807,
+      "LOWVOL": 0.758,
+      "ROTATE": 0.815,
+      "RESID": 0.763,
+      "SECTOR_MA": 0.793,
+      "BENCH_EW_LIQ": 0.892
+    },
+    "DUAL": {
+      "XSMOM": 0.926,
+      "DUAL": 1.0,
+      "BREAK": 0.626,
+      "REV": 0.791,
+      "LOWVOL": 0.684,
+      "ROTATE": 0.815,
+      "RESID": 0.74,
+      "SECTOR_MA": 0.798,
+      "BENCH_EW_LIQ": 0.805
+    },
+    "BREAK": {
+      "XSMOM": 0.649,
+      "DUAL": 0.626,
+      "BREAK": 1.0,
+      "REV": 0.607,
+      "LOWVOL": 0.63,
+      "ROTATE": 0.599,
+      "RESID": 0.604,
+      "SECTOR_MA": 0.641,
+      "BENCH_EW_LIQ": 0.711
+    },
+    "REV": {
+      "XSMOM": 0.807,
+      "DUAL": 0.791,
+      "BREAK": 0.607,
+      "REV": 1.0,
+      "LOWVOL": 0.743,
+      "ROTATE": 0.764,
+      "RESID": 0.773,
+      "SECTOR_MA": 0.808,
+      "BENCH_EW_LIQ": 0.838
+    },
+    "LOWVOL": {
+      "XSMOM": 0.758,
+      "DUAL": 0.684,
+      "BREAK": 0.63,
+      "REV": 0.743,
+      "LOWVOL": 1.0,
+      "ROTATE": 0.659,
+      "RESID": 0.676,
+      "SECTOR_MA": 0.736,
+      "BENCH_EW_LIQ": 0.869
+    },
+    "ROTATE": {
+      "XSMOM": 0.815,
+      "DUAL": 0.815,
+      "BREAK": 0.599,
+      "REV": 0.764,
+      "LOWVOL": 0.659,
+      "ROTATE": 1.0,
+      "RESID": 0.711,
+      "SECTOR_MA": 0.809,
+      "BENCH_EW_LIQ": 0.791
+    },
+    "RESID": {
+      "XSMOM": 0.763,
+      "DUAL": 0.74,
+      "BREAK": 0.604,
+      "REV": 0.773,
+      "LOWVOL": 0.676,
+      "ROTATE": 0.711,
+      "RESID": 1.0,
+      "SECTOR_MA": 0.758,
+      "BENCH_EW_LIQ": 0.8
+    },
+    "SECTOR_MA": {
+      "XSMOM": 0.793,
+      "DUAL": 0.798,
+      "BREAK": 0.641,
+      "REV": 0.808,
+      "LOWVOL": 0.736,
+      "ROTATE": 0.809,
+      "RESID": 0.758,
+      "SECTOR_MA": 1.0,
+      "BENCH_EW_LIQ": 0.863
+    },
+    "BENCH_EW_LIQ": {
+      "XSMOM": 0.892,
+      "DUAL": 0.805,
+      "BREAK": 0.711,
+      "REV": 0.838,
+      "LOWVOL": 0.869,
+      "ROTATE": 0.791,
+      "RESID": 0.8,
+      "SECTOR_MA": 0.863,
+      "BENCH_EW_LIQ": 1.0
+    }
+  },
+  "names_last": [
+    {
+      "code": "000823",
+      "name": "超声电子",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.510707,
+      "ret_60": 0.204969,
+      "ret_252": 0.734724,
+      "dd_252": -0.18201,
+      "med_amount_wan_20": 310122.985,
+      "above_ma200": true
+    },
+    {
+      "code": "001389",
+      "name": "广合科技",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.128746,
+      "ret_60": -0.038428,
+      "ret_252": 1.444783,
+      "dd_252": -0.253339,
+      "med_amount_wan_20": 123935.82,
+      "above_ma200": true
+    },
+    {
+      "code": "002384",
+      "name": "东山精密",
+      "sub": "FPC",
+      "last_date": "2026-09-30",
+      "ret_20": -0.112831,
+      "ret_60": -0.293283,
+      "ret_252": 1.155827,
+      "dd_252": -0.393038,
+      "med_amount_wan_20": 1025324.755,
+      "above_ma200": true
+    },
+    {
+      "code": "002436",
+      "name": "兴森科技",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.184949,
+      "ret_60": -0.030547,
+      "ret_252": 0.849142,
+      "dd_252": -0.235195,
+      "med_amount_wan_20": 563553.53,
+      "above_ma200": true
+    },
+    {
+      "code": "002463",
+      "name": "沪电股份",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": -0.039679,
+      "ret_60": -0.106306,
+      "ret_252": 0.693892,
+      "dd_252": -0.252016,
+      "med_amount_wan_20": 554255.61,
+      "above_ma200": true
+    },
+    {
+      "code": "002579",
+      "name": "中京电子",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.198864,
+      "ret_60": -0.040364,
+      "ret_252": 0.313619,
+      "dd_252": -0.258999,
+      "med_amount_wan_20": 236795.635,
+      "above_ma200": true
+    },
+    {
+      "code": "002636",
+      "name": "金安国纪",
+      "sub": "CCL",
+      "last_date": "2026-09-30",
+      "ret_20": 0.0897,
+      "ret_60": -0.205738,
+      "ret_252": 4.982681,
+      "dd_252": -0.337751,
+      "med_amount_wan_20": 414871.07,
+      "above_ma200": true
+    },
+    {
+      "code": "002815",
+      "name": "崇达技术",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.586897,
+      "ret_60": 0.486434,
+      "ret_252": 0.40134,
+      "dd_252": -0.093738,
+      "med_amount_wan_20": 189211.815,
+      "above_ma200": true
+    },
+    {
+      "code": "002913",
+      "name": "奥士康",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.48919,
+      "ret_60": 0.695756,
+      "ret_252": 1.193441,
+      "dd_252": 0.0,
+      "med_amount_wan_20": 102470.565,
+      "above_ma200": true
+    },
+    {
+      "code": "002916",
+      "name": "深南电路",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.05269,
+      "ret_60": -0.094856,
+      "ret_252": 1.011378,
+      "dd_252": -0.18539,
+      "med_amount_wan_20": 296404.415,
+      "above_ma200": true
+    },
+    {
+      "code": "002938",
+      "name": "鹏鼎控股",
+      "sub": "FPC",
+      "last_date": "2026-09-30",
+      "ret_20": -0.098277,
+      "ret_60": -0.139349,
+      "ret_252": 0.492495,
+      "dd_252": -0.336586,
+      "med_amount_wan_20": 179707.49,
+      "above_ma200": true
+    },
+    {
+      "code": "300476",
+      "name": "胜宏科技",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": -0.097347,
+      "ret_60": -0.261898,
+      "ret_252": -0.358,
+      "dd_252": -0.464817,
+      "med_amount_wan_20": 598178.415,
+      "above_ma200": false
+    },
+    {
+      "code": "300657",
+      "name": "弘信电子",
+      "sub": "FPC",
+      "last_date": "2026-09-30",
+      "ret_20": -0.09396,
+      "ret_60": -0.11427,
+      "ret_252": -0.038861,
+      "dd_252": -0.37788,
+      "med_amount_wan_20": 85960.895,
+      "above_ma200": false
+    },
+    {
+      "code": "300814",
+      "name": "中富电路",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": -0.060954,
+      "ret_60": -0.261231,
+      "ret_252": 1.481874,
+      "dd_252": -0.410193,
+      "med_amount_wan_20": 85102.77,
+      "above_ma200": true
+    },
+    {
+      "code": "300903",
+      "name": "科翔股份",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.031173,
+      "ret_60": 0.035686,
+      "ret_252": 6.210156,
+      "dd_252": -0.182189,
+      "med_amount_wan_20": 210325.57,
+      "above_ma200": true
+    },
+    {
+      "code": "300964",
+      "name": "本川智能",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.186651,
+      "ret_60": -0.083931,
+      "ret_252": 1.020504,
+      "dd_252": -0.199489,
+      "med_amount_wan_20": 57031.165,
+      "above_ma200": true
+    },
+    {
+      "code": "301251",
+      "name": "威尔高",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.500185,
+      "ret_60": 0.5974,
+      "ret_252": 0.899742,
+      "dd_252": -0.106828,
+      "med_amount_wan_20": 94738.605,
+      "above_ma200": true
+    },
+    {
+      "code": "301282",
+      "name": "金禄电子",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.139147,
+      "ret_60": 0.315341,
+      "ret_252": 1.009161,
+      "dd_252": -0.126781,
+      "med_amount_wan_20": 71048.46,
+      "above_ma200": true
+    },
+    {
+      "code": "301366",
+      "name": "一博科技",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.266062,
+      "ret_60": 0.203174,
+      "ret_252": 0.770558,
+      "dd_252": -0.071723,
+      "med_amount_wan_20": 100153.47,
+      "above_ma200": true
+    },
+    {
+      "code": "600183",
+      "name": "生益科技",
+      "sub": "CCL",
+      "last_date": "2026-09-30",
+      "ret_20": -0.100125,
+      "ret_60": -0.138025,
+      "ret_252": 1.472603,
+      "dd_252": -0.305769,
+      "med_amount_wan_20": 924183.2,
+      "above_ma200": true
+    },
+    {
+      "code": "600601",
+      "name": "方正科技",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.075795,
+      "ret_60": -0.102041,
+      "ret_252": 0.106454,
+      "dd_252": -0.140625,
+      "med_amount_wan_20": 305848.06,
+      "above_ma200": true
+    },
+    {
+      "code": "603186",
+      "name": "华正新材",
+      "sub": "CCL",
+      "last_date": "2026-09-30",
+      "ret_20": 0.243117,
+      "ret_60": 0.149141,
+      "ret_252": 4.455618,
+      "dd_252": -0.190791,
+      "med_amount_wan_20": 373043.03,
+      "above_ma200": true
+    },
+    {
+      "code": "603228",
+      "name": "景旺电子",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.133371,
+      "ret_60": 0.573049,
+      "ret_252": 0.478598,
+      "dd_252": -0.094318,
+      "med_amount_wan_20": 334730.925,
+      "above_ma200": true
+    },
+    {
+      "code": "603328",
+      "name": "依顿电子",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.264168,
+      "ret_60": 0.170051,
+      "ret_252": 0.172034,
+      "dd_252": -0.090132,
+      "med_amount_wan_20": 83114.25,
+      "above_ma200": true
+    },
+    {
+      "code": "603386",
+      "name": "骏亚科技",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.222769,
+      "ret_60": 0.056466,
+      "ret_252": 0.157685,
+      "dd_252": -0.162656,
+      "med_amount_wan_20": 27658.72,
+      "above_ma200": true
+    },
+    {
+      "code": "603920",
+      "name": "世运电路",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.180223,
+      "ret_60": 0.068592,
+      "ret_252": 0.075581,
+      "dd_252": -0.369139,
+      "med_amount_wan_20": 143837.98,
+      "above_ma200": false
+    },
+    {
+      "code": "603936",
+      "name": "博敏电子",
+      "sub": "MID_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": 0.101309,
+      "ret_60": -0.038748,
+      "ret_252": 0.46702,
+      "dd_252": -0.324607,
+      "med_amount_wan_20": 103716.625,
+      "above_ma200": true
+    },
+    {
+      "code": "688183",
+      "name": "生益电子",
+      "sub": "AI_PCB",
+      "last_date": "2026-09-30",
+      "ret_20": -0.119374,
+      "ret_60": -0.114464,
+      "ret_252": 0.19087,
+      "dd_252": -0.234423,
+      "med_amount_wan_20": 211327.675,
+      "above_ma200": true
+    },
+    {
+      "code": "688519",
+      "name": "南亚新材",
+      "sub": "CCL",
+      "last_date": "2026-09-30",
+      "ret_20": -0.059828,
+      "ret_60": -0.193343,
+      "ret_252": 2.830968,
+      "dd_252": -0.335162,
+      "med_amount_wan_20": 167240.19,
+      "above_ma200": true
+    }
+  ]
+}
