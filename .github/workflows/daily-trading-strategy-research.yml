@@ -1,9 +1,9 @@
 name: 每日交易策略研究 (Cursor Skill)
 
 on:
-  # 每天北京时间 09:00（UTC 01:00）
+  # 工作日北京时间 08:00（UTC 00:00，周一至周五）
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 0 * * 1-5'
   # 无服务器：飞书自动化 / Cloudflare Worker → repository_dispatch
   repository_dispatch:
     types: [feishu-strategy-research]

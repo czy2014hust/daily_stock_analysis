@@ -1,13 +1,15 @@
 # 每日交易策略研究（Cursor Skill → 飞书）
 
-每天 **北京时间 09:00** 自动调用 Cursor Cloud Agents API，执行仓库内 skill  
+每个 **工作日北京时间 08:00**（周一至周五）自动调用 Cursor Cloud Agents API，执行仓库内 skill  
 `.cursor/skills/trading-strategy-research/`（`/trading-strategy-research`），  
 并把结果摘要推送到你已配置的飞书群。
+
+> cron 按周一至周五调度，不含中国法定节假日调休判断；节假日若仍触发可手动忽略或取消该次 Actions。
 
 ## 架构
 
 ```text
-GitHub Actions cron (01:00 UTC = 09:00 Asia/Shanghai)
+GitHub Actions cron (00:00 UTC Mon–Fri = 08:00 Asia/Shanghai weekdays)
         │
         ▼
 scripts/trigger_trading_strategy_research.py
@@ -78,7 +80,7 @@ Workflow 文件：`.github/workflows/daily-trading-strategy-research.yml`
 
 ### GitHub Actions（推荐）
 
-- 定时：每天 09:00（北京时间）自动跑
+- 定时：每个工作日 08:00（北京时间，周一至周五）自动跑
 - 手动：Actions → **每日交易策略研究 (Cursor Skill)** → Run workflow  
   - 可勾选「跳过飞书」  
   - 可填写额外研究焦点
@@ -107,7 +109,7 @@ GitHub Actions 手动运行时也可勾选 **仅测试飞书连通性**。
 若你更想用 Cursor 控制台而不是 GitHub Actions：
 
 1. 打开 [cursor.com/automations](https://cursor.com/automations)
-2. 新建 Automation，Trigger 选 **Scheduled**，cron：`0 1 * * *`（UTC）或按 UI 时区选每天 09:00
+2. 新建 Automation，Trigger 选 **Scheduled**，cron：`0 0 * * 1-5`（UTC，周一至周五）或按 UI 时区选工作日 08:00
 3. Repository 选本仓库 `main`
 4. Prompt 可直接使用：
 

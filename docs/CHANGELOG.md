@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- [变更] 每日交易策略研究定时改为工作日北京时间 08:00（cron `0 0 * * 1-5` UTC，周一至周五）。
 - [文档] 推荐无服务器路径改为飞书自动化直接调用 GitHub `repository_dispatch`（`docs/bot/feishu-github-dispatch.md`），不再依赖 Cloudflare Worker URL 校验。
 - [新功能] 无服务器飞书触发：Cloudflare Worker 桥接飞书 text → GitHub `repository_dispatch` → Actions 调用 Cursor `trading-strategy-research` → `FEISHU_WEBHOOK_URL` 回传结论（`deploy/feishu-cursor-bridge/`）。
 - [新功能] 飞书 Stream Bot 支持 `/策略研究`（`/tsr`）：接收 text → 调用 Cursor `trading-strategy-research` skill → 回复会话并可选 Webhook 广播结论。
-- [新功能] 支持每天北京时间 09:00 通过 Cursor Cloud Agents API 执行 `trading-strategy-research` skill，并将摘要推送到已配置飞书群（GitHub Actions + `scripts/trigger_trading_strategy_research.py`）。
+- [新功能] 支持通过 Cursor Cloud Agents API 执行 `trading-strategy-research` skill，并将摘要推送到已配置飞书群（GitHub Actions + `scripts/trigger_trading_strategy_research.py`）。
 - [新功能] 新增 `cursor_cli` generation-only 本地 CLI backend（`GENERATION_BACKEND=cursor_cli`），可选 `CURSOR_CLI_MODEL` 覆盖本机 Cursor Agent CLI 模型；Web 设置页与 LLM 配置指南同步暴露该实验能力。
 - [文档] Cursor skill: trading-strategy-research — systematic quant strategy research workflow under `.cursor/skills/trading-strategy-research/`
 - [修复] 个股资金流按沪深北市场请求并取最新有效交易日的主力净流入金额；去掉默认股票和市场排名的错误降级，行业排名仅使用有限金额，行业金额全部缺失或非有限时仍保留有效个股结果。
