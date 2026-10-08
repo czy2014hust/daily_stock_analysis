@@ -44,7 +44,7 @@
 | --- | --- |
 | [Bot 命令与接入](bot-command.md) | Bot 命令、Webhook、平台接入和回调说明 |
 | [Bot 平台配置](bot/) | 飞书、钉钉、Discord 等 Bot 配置截图和补充说明 |
-| [每日交易策略研究调度](TRADING_STRATEGY_RESEARCH_SCHEDULE.md) | 每天 09:00（北京时间）调用 Cursor API 跑 trading-strategy-research skill 并推送飞书 |
+| [每日交易策略研究调度](TRADING_STRATEGY_RESEARCH_SCHEDULE.md) | 工作日 08:00（北京时间）调用 Cursor API 跑 trading-strategy-research skill 并推送飞书 |
 | [飞书自动化触发 GitHub](bot/feishu-github-dispatch.md) | 多维表格/工作流 HTTP 调用 GitHub API，Actions 跑 skill，结论回飞书 Webhook |
 | [无服务器飞书→Cursor 桥接](../deploy/feishu-cursor-bridge/README.md) | Cloudflare Worker 收飞书 text，触发 Actions 跑 skill，结论回飞书 Webhook |
 | [实时告警中心](alerts.md) | EventMonitor 基线、Web 规则管理、通知结果、冷却状态和 Phase 边界 |

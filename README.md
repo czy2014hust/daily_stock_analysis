@@ -150,7 +150,7 @@
 
 默认每个**工作日 18:00（北京时间）**自动执行，也可手动触发。默认非交易日（含 A/H/US 节假日）不执行；强制运行、交易日检查、断点续传等规则见 [完整指南](docs/full-guide.md#定时任务配置)。
 
-另可选：**每天 09:00（北京时间）** 通过 Cursor Cloud Agents API 执行 `/trading-strategy-research` skill，并将摘要推送到已配置飞书群（需仓库 Secret `CURSOR_API_KEY`）。无服务器时推荐用 [飞书自动化调 GitHub API](docs/bot/feishu-github-dispatch.md)；也可用 Cloudflare Worker 或 Stream Bot。见 [每日交易策略研究调度](docs/TRADING_STRATEGY_RESEARCH_SCHEDULE.md) 与 [飞书 Bot 配置](docs/bot/feishu-bot-config.md)。
+另可选：**每个工作日 08:00（北京时间）** 通过 Cursor Cloud Agents API 执行 `/trading-strategy-research` skill，并将摘要推送到已配置飞书群（需仓库 Secret `CURSOR_API_KEY`）。无服务器时推荐用 [飞书自动化调 GitHub API](docs/bot/feishu-github-dispatch.md)；也可用 Cloudflare Worker 或 Stream Bot。见 [每日交易策略研究调度](docs/TRADING_STRATEGY_RESEARCH_SCHEDULE.md) 与 [飞书 Bot 配置](docs/bot/feishu-bot-config.md)。
 
 ### 方式二：[客户端配置教程](https://www.bilibili.com/video/BV11FEb66Eyr/) / 本地运行 / Docker 部署
 
