@@ -135,17 +135,72 @@ STOCKS: Dict[str, str] = {
 
 # Interpretation written after reading this run's tables. It explains results; it never
 # feeds back into rules, parameters or the pass/fail checks.
-ELIMINATED: List[str] = []
-INTERP_NOTES: Dict[str, str] = {}
-EXEC_INTERP: List[str] = []
-RISK_INTERP: List[str] = []
-SELF_CHECK_INTERP: List[str] = []
-OVERLAP_NOTE = ""
+ELIMINATED: List[str] = ["Stock_DivMonth", "Stock_Value", "Stock_Seasonal"]
+INTERP_NOTES: Dict[str, str] = {
+    "Stock_DivMonth": (
+        "解读：全样本相对 EW_Stocks 超额 2.9%/年、逐只剔除 24/24 次为正、与其他规则超额相关接近 0（-0.01 ~ 0.09），是本期唯一看上去独立的新信号，但证据经不起拆分。"
+        "① 时间：超额来自 2020–2021 年（逐年 +11.7%、+14.5%），2022 年起年化 -0.1%/年，2022–2024 连续三年落后（-2.2%、-3.6%、-13.7%）。"
+        "② 机制：事件周占比在 5–7 月是 100%（年报分红季），但这几个月的超额是负的（5 月 -1.39%/月、6 月 -0.51%/月）；正超额集中在 4、8、10 月这些只有部分名字处于事件窗口的月份，"
+        "与「预期除息前的买盘压力」这一预设机制不符。③ 统计：事件状态的年化超额 8.6%，t 值只有 1.04。④ 成本：周度调仓、年换手 29 倍，成本翻倍后 CAGR 14.5% 低于等权 16.3%，超额被成本吃光。"
+        "敏感度里「只用已公告」「窗口 15 天」的样本外更好（1.16、1.31），而最贴近 Hartzmark-Solomon 原文的「只用去年除息日推算」最差（全样本 0.82、样本外 0.68），同样说明不是预设的那个效应。"
+        "结论：未过门槛（Sharpe-rf 0.83），且通过的几条门槛靠 2020–2021 年支撑，淘汰；不要换窗口或改用「只用已公告」复活。"
+    ),
+    "Stock_Value": (
+        "解读：价值规则与 Stock_DivYield 超额相关 0.83、与 Stock_LowVol 0.71，持仓与 Stock_LowVol 重合 41%，是同一组银行、保险、家电、券商的「便宜防御股」暴露，不是独立的收益来源。"
+        "全样本跑输等权 2.6%/年、逐只剔除 0/24 次为正，几乎全部来自 2020 年（单年落后等权 65.6 个百分点）；2021 年起相对等权 +6.3%/年、样本外 Sharpe 1.51，"
+        "但「从 2021 年算」是看完结果才选的窗口，与 10-22 期 Stock_EarnMom「只在 2020 年领先」是同一种单年份依赖，只是方向相反。"
+        "数据时点：东方财富 PB 反推的净资产在季末日跳变（例如招商银行 2024-09-30，三季报 10 月底才发布），说明 PB 按报告期回填、带约一个月的前视；"
+        "前视只会让规则看起来更好，因此「未过门槛」的结论不受影响，而 1/PB 单因子（Sharpe 0.91）高于 1/PE 单因子（0.86）应视为前视的上限效应，不能当作证据。"
+        "结论：淘汰。价值/股息方向由已在观察名单的 Stock_DivYield 代表，不另设候选。"
+    ),
+    "Stock_Seasonal": (
+        "解读：同月季节性在这个大盘股池里是反向的：0/7 个年份跑赢等权，全样本 -14.6%/年，逐只剔除后仍在 -15.6% ~ -10.3%，回撤 -52.5%。"
+        "选出的多是上一两年同月大涨过的高波动成长股（当前：紫金矿业、比亚迪、立讯精密、中航沈飞、隆基绿能），与低波动类规则超额相关 -0.34 ~ -0.26，下一年同月更常见的是回吐。"
+        "评估期开始时只有 2 年历史（价格从 2018 年取），但回看 3 年版本（0.13）与 5 年版本（0.09）同样失败，持 3/8 只也都低于 0.4，不是窗口问题。结论：淘汰。"
+    ),
+}
+EXEC_INTERP: List[str] = [
+    "本期 3 个新候选全部淘汰：分红月溢价 Stock_DivMonth 全样本跑赢股票池等权 2.9%/年、逐只剔除 24/24 次为正，但 2022 年起超额 -0.1%/年，"
+    "分红季（5–6 月）反而跑输，事件状态超额 t 值 1.04，成本翻倍后跑输等权；价值 Stock_Value 与股息率超额相关 0.83，全样本跑输等权且 PB 数据带报告期前视；"
+    "同月季节性 Stock_Seasonal 7 年全部跑输等权（-14.6%/年）。",
+    "复现：上一版（10-22）脚本在 LAST_BAR=2026-10-21 上重跑，16 个序列的 Sharpe、CAGR、最大回撤、样本外 Sharpe 与上一版报告逐一相同。",
+    "相对 10-22 期：新增 2026-10-22 一根日线（沪深300 -1.8%、创业板指 -4.4%、中证1000 -3.0%），行业 ETF 站上 MA60 的比例从 13% 降到 7%，状态仍为 bear；"
+    "低波动类规则 2026 年至今继续领先（Stock_LowVol +8.2%、Stock_MomLowVol +8.3%，股票池等权 -3.2%），观察名单排序不变。",
+]
+RISK_INTERP: List[str] = [
+    "- 同一种失败模式第三次出现：Stock_EarnMom（10-22 期，只靠 2020 年）、Stock_Value（本期，只输在 2020 年）、Stock_DivMonth（本期，只靠 2020–2021 年）。"
+    "这个 24 只股票池的 2020 年成长股行情足以单独决定一条规则的全样本结论；任何新规则都必须先看逐年超额，再看全样本。",
+    "- 风格集中：Stock_DivYield、Stock_LowVol、Stock_MomLowVol、Sector_LowVol 当前持仓都偏向银行、红利、家电、电力，超额相关 0.66–0.78；本期淘汰的 Stock_Value 也在这一簇里（与 DivYield 0.83）。"
+    "一旦风格反转会一起跑输（Stock_DivYield 2020 年落后等权 70 个百分点）。",
+    "- 价格源噪声：新浪前复权在每次除息后整体缩放并取整到分，排名型个股规则（尤其残差动量）会因此换股；实盘若用另一家行情源，持仓会与回测不同。",
+    "- 基本面时点：东方财富 PB 按报告期回填（净资产在季末日跳变），任何用 PB 的规则都带前视；PE(TTM) 的利润端抽查落在披露日，目前没有发现同样问题。",
+]
+SELF_CHECK_INTERP: List[str] = [
+    "- Edge 还是拟合：3 个新候选的规则、参数、对照基准在跑数前写入代码并提交（commit 早于本次结果）；全部未过门槛，首跑后没有改任何规则参数。"
+    "首跑后新增的只有分红月按日历月的拆分表（纯诊断）和报告正文的解读，都没有回写到规则。",
+    "- 非预注册的显眼结果：DivMonth_h15（样本外 1.31）、DivMonth_ann_only（全样本 0.97）、Value_by_only（0.91，且带 PB 前视）是看完历史后才知道的档位，不升级为候选。",
+    "- 会改变结论的证据：未来 12 个月的分红季（2027 年 5–7 月）Stock_DivMonth 的事件篮子显著跑赢等权；用披露日对齐的净资产重建 Stock_Value 后，2021 年以后的超额仍在且与 DivYield 相关明显下降。",
+    "- 本期最重要的发现不是新候选，而是数据时点：PB 的季末跳变说明东方财富估值序列并非处处按披露日生效，之后用到 PB 或净资产的规则都要先做同样的抽查。",
+]
+OVERLAP_NOTE = (
+    "解读：Stock_Value 与低波动三兄弟（LowVol / MomLowVol / DivYield）超额相关 0.61 ~ 0.83，持仓与 Stock_LowVol 重合 41%，是同一簇防御暴露。"
+    "Stock_DivMonth 与所有规则超额相关在 -0.01 ~ 0.09，是独立的，但独立并不等于有效（见逐年与日历月拆分）。"
+    "Stock_Seasonal 与低波动类负相关（-0.34 ~ -0.26），它押的是高波动成长股。"
+)
 FUNDAMENTAL_NOTES: List[str] = [
     "- 股息率实现沿用 10-21 期的同档去重修正（窗口内比最新一笔早 330 天以上的分红剔除）。",
+    "- PB 前视（本期新发现）：隐含净资产（总市值/PB）在 2024-04-01、2024-09-30、2024-12-31、2025-09-30、2026-03-31 等季末/季初日跳变（招商银行），"
+    "贵州茅台、中国神华同样出现在 07-01、09-30、12-31 等日期，早于对应财报的披露日；说明东方财富把新净资产回填到报告期末。Stock_Value 的 1/PB 部分因此带约 1 个月（年报约 3–4 个月）的前视，"
+    "没有修正，结论按「上限」解读。隐含利润（总市值/PE）的跳变则落在披露日，与 10-21 期抽查一致。",
+    "- 分红月事件：「去年除息日 +365 天」只用已经发生的实施记录；「已公告」只用新浪「实施」记录的公告日（实施公告，通常在除息前 5–10 个交易日），预案公告日不在接口里，因此事件窗口偏晚、偏保守。",
 ]
-REPRO_NOTE = ""
-REPRO_SELF_CHECK = ""
+REPRO_NOTE = (
+    "- 先用上一版（10-22）原始脚本、LAST_BAR=2026-10-21 在独立目录重跑（独立缓存）：16 个序列的 Sharpe、CAGR、最大回撤、样本外 Sharpe 与上一版报告逐一相同，"
+    "包括 10-22 期对除息取整敏感的 Stock_ResMom（0.81 / 18.1% / -33.1% / 0.80）。"
+)
+REPRO_SELF_CHECK = (
+    "- 复现性：上一版（10-22）脚本在 LAST_BAR=2026-10-21 上重跑，16/16 个序列与上一版报告一致；本期数据只多了 2026-10-22 一根日线。"
+)
 
 INDEXES: Dict[str, str] = {
     "sh000001": "上证指数",
@@ -1808,7 +1863,16 @@ def run() -> None:
     event_stats["avg_names_event_weeks"] = float(n_ev_wk[n_ev_wk >= 2].mean()) if (n_ev_wk >= 2).any() else float("nan")
     ev_months = pd.Series(n_ev_wk.values >= 2, index=pd.DatetimeIndex(wk_eval)).groupby(lambda d: d.month).mean()
     event_stats["event_share_by_month"] = {int(k): float(v) for k, v in ev_months.items()}
+    ex_by_month = dm_ex.groupby(dm_ex.index.month).mean() * 21
+    event_stats["excess_per_month_by_calendar_month"] = {int(k): float(v) for k, v in ex_by_month.items()}
     event_table = markdown_table(["状态", "占评估期交易日", "相对 EW 年化超额", "样本外年化超额", "t 值"], event_rows)
+    event_table += "\n\n" + markdown_table(
+        ["日历月"] + [str(m) for m in range(1, 13)],
+        [
+            ["事件周占比"] + [fmt_pct(event_stats["event_share_by_month"].get(m, float("nan")), 0) for m in range(1, 13)],
+            ["相对 EW 超额（每月，日均×21）"] + [fmt_pct(event_stats["excess_per_month_by_calendar_month"].get(m, float("nan")), 2) for m in range(1, 13)],
+        ],
+    )
 
     # Market snapshot
     index_rows = []
@@ -2302,8 +2366,8 @@ def run() -> None:
         )
     rec_bits.append("")
     rec_bits.append(
-        "不作为推荐的做法：用本次敏感度表里 Sharpe 最高的参数替换预注册参数（例如把 Stock_MomLowVol 改成持 8 只、把盈利动量换成敏感度表里更好的回看窗口、"
-        "把配对规则换成更好的入场阈值）；把单一行业主题或利率下行的历史 beta 当成策略 alpha。"
+        "不作为推荐的做法：用本次敏感度表里 Sharpe 最高的参数替换预注册参数（例如把 Stock_MomLowVol 改成持 8 只、把分红月窗口换成 15 天或「只用已公告」、"
+        "把价值规则换成只用 1/PB）；把单一行业主题或利率下行的历史 beta 当成策略 alpha。"
     )
     rec_bits.append("")
     new_cands = ["Stock_Value", "Stock_DivMonth", "Stock_Seasonal"]
@@ -2326,7 +2390,7 @@ def run() -> None:
             + "、".join(f"{n} {stats[n]['full']['ann_turnover']:.1f} 倍" for n in new_cands)
             + "。成本翻倍的影响见第 4 节。",
             "- 回测按目标权重差计费，没有计入两次调仓之间权重随价格漂移的再平衡成本（全部策略同一口径）。Stock_DivMonth 每周调仓，事件篮子进出频繁，实盘成本敏感度最高。",
-            "- 价值规则依赖东方财富 PE(TTM)/PB 在财报披露日更新；若数据源改成按报告期回填，信号会带前视，须先重新做披露日抽查再使用。",
+            "- 估值数据时点：东方财富 PB 已确认按报告期回填（见数据节），不能直接用于实盘信号；PE(TTM) 的利润端抽查落在披露日。任何用到估值的规则上线前都要重做披露日抽查。",
             "- 个股策略的持仓只有 5 只：逐只剔除表显示单一名字能明显改变结果，实盘至少要把单票上限、行业上限写进风控，并接受与回测不同的持仓。",
             "- 低波动组合（RiskParity_SBG）的回撤阈值不能沿用股票口径：历史最大回撤约 4%，按 1.25 倍规则在回撤 5% 时就应减半复核。",
             "- 现金：回测现金收益为 0。实盘空仓可放货币 ETF，但这部分收益不属于策略 alpha。",
@@ -2351,7 +2415,7 @@ def run() -> None:
             *RISK_INTERP,
             "- 已淘汰的候选（10-19 至 10-22 期：WeeklyRev、NearHigh、VolMgd、Holiday_Post5、AbnTurnover、OvernightRev、LowMAX、Gold_TSMOM、Stock_Quality、ERP_Timing、"
             "Sector_DualMom、Stock_CS_Mom、Stock_EarnMom、Stock_PairMR、Bond_TSMOM）不进入观察名单；不要换参数复活。",
-            "- 幸存者偏差：股票池、配对和 ETF 池都是 2026 年仍在交易的主流工具，没有加入已清盘 ETF 和退市股。结果对「当时可投资宇宙」偏乐观。",
+            "- 幸存者偏差：股票池和 ETF 池都是 2026 年仍在交易的主流工具，没有加入已清盘 ETF 和退市股。结果对「当时可投资宇宙」偏乐观。",
             "- 制度变化：印花税、涨跌停、T+1、行业 ETF 扩容都会改变成本和收益结构。15bps 单边是常数近似；2023-08 印花税减半前的真实成本更高。",
             "- 数据：前复权在大比例分红除权日可能残留跳变，且新浪会回溯修订前复权历史；ETF 分红依赖新浪披露，部分 ETF 没有记录（见数据节）。",
             "- 宏观打印若与国债期货或财政部曲线不一致，以官方曲线为准，本报告不据此交易利率。",
