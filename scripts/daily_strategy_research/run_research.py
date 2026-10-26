@@ -59,6 +59,20 @@ import pandas as pd
 warnings.filterwarnings("ignore")
 # AkShare calls have no timeout of their own; a stalled socket would hang the run instead of retrying.
 socket.setdefaulttimeout(60)
+# requests passes timeout=None explicitly, which overrides the socket default (seen hanging in a TLS handshake).
+try:
+    import requests as _requests
+
+    _orig_request = _requests.Session.request
+
+    def _request_with_timeout(self, method, url, **kwargs):  # type: ignore[no-untyped-def]
+        if kwargs.get("timeout") is None:
+            kwargs["timeout"] = 60
+        return _orig_request(self, method, url, **kwargs)
+
+    _requests.Session.request = _request_with_timeout  # type: ignore[assignment]
+except ImportError:
+    pass
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent / "output"
@@ -140,22 +154,76 @@ STOCKS: Dict[str, str] = {
 
 # Interpretation written after reading this run's tables. It explains results; it never
 # feeds back into rules, parameters or the pass/fail checks.
-ELIMINATED: List[str] = []
-INTERP_NOTES: Dict[str, str] = {}
-EXEC_INTERP: List[str] = []
-RISK_INTERP: List[str] = [
-    "- 风格集中：Stock_DivYield、Stock_LowVol、Stock_MomLowVol、Sector_LowVol 当前持仓都偏向银行、红利、家电、电力，10-23 期超额相关 0.66–0.78。"
-    "一旦风格反转会一起跑输（Stock_DivYield 2020 年落后等权 70 个百分点）。",
-    "- 价格源噪声：新浪前复权在每次除息后整体缩放并取整到分，排名型个股规则（尤其残差动量）会因此换股；实盘若用另一家行情源，持仓会与回测不同。",
+ELIMINATED: List[str] = ["US_LeadLag", "VRP_Timing"]
+INTERP_NOTES: Dict[str, str] = {
+    "US_LeadLag": (
+        "解读：预设机制是「美股大跌的信息在 A 股开盘后继续扩散」，机制表直接否定了它。美股前一日跌超 1% 的 209 个交易日里，510300 开盘跳空均值 -0.48%（t=-9.40），"
+        "信息在集合竞价里已经被定价；随后开盘→次日开盘段均值反而是 +0.14%（t=1.60），美股涨超 1% 后该段是 -0.10%（t=-1.54）。也就是说开盘之后是轻微回吐，不是延续，"
+        "规则恰好空掉了表现最好的那批交易段。再加上年换手 51.8 倍（约 4%/年成本），扣费后相对同口径持有 -8.6%/年，7 个年份全部为负；安慰剂（信号再滞后一天）-0.01 反而比主规格好，"
+        "四档阈值与「只在美股收涨后持有」全部为负。反向规则（只在美股大跌后买入）不在本期预注册范围内，按机制表算术：每次 +0.14% 对应 16bps 往返成本，扣费后约为零，也不是可用的 edge。"
+        "注：BH_CSI300_O2O 与收盘口径 BH_CSI300 的 CAGR 只差 0.2 个百分点，超额表里的 -2.9% 来自日差序列的波动拖累，不是真实收益差。结论：淘汰。"
+    ),
+    "VRP_Timing": (
+        "解读：机制表方向与理论一致（高 VRP 状态下股票−国债年化 +11.0%，低 VRP 状态 -9.8%），但 t 值只有 1.00 / -0.89，样本内差异主要来自 2020 年（逐年超额 +22.3%），"
+        "2021、2023、2024 年落后 EW_SB，2024-09~2025-03 的上涨行情里持有国债（-4.4%，EW_SB +10.8%）。参数稳健性不过关：已实现波动改用 60 日时 Sharpe 0.00，"
+        "周度调仓 0.16（样本外 -0.13）——信号若真实，提高调仓频率不应让结果崩掉。只用隐含方差水平（0.64）与主规格（0.66）几乎一样，说明 VRP 里的「已实现方差」部分没有增加信息。"
+        "Sharpe-rf 0.50，回撤 -25.2% 与持有沪深300同量级。结论：淘汰；不要换成 500 日中位数（0.70）复活。"
+    ),
+    "Stock_HolderConc": (
+        "解读：本期唯一保留进观察名单的新候选，但只是「低相关的弱信号」，不是已验证的 edge。正面：与低波动簇的超额相关只有 0.03–0.21、持仓与 Stock_LowVol 重合 19%，是独立的收益来源；"
+        "秩 IC 样本内 0.030、样本外 0.032，符号一致；户数变化与同期涨跌幅秩相关 -0.45（股价跌时散户进场），但剔除区间涨跌幅后的残差版本 Sharpe 0.91 反而更高，说明它不只是价格反转换了个名字；"
+        "逐只剔除 18/24 次跑赢等权，持 3/5/8 只与两期累计版本都在 0.78–1.05。负面：IC t 值只有 1.06；超额集中在一个时间块——2020–2022 年每年落后等权约 11 个百分点，"
+        "2023–2025 年每年领先 17–24 个百分点，2026 年至今又落后 12.2 个百分点，全样本只多 0.5%/年；Sharpe-rf 0.73、回撤 -31.3% 都不过门槛。"
+        "持 8 只（Sharpe 1.05）不是预注册主规格，不升级。结论：未过门槛，保留观察，至少要看到 2026 年后续季度（三季报户数 10 月底集中披露）超额转正才考虑提高优先级。"
+    ),
+}
+EXEC_INTERP: List[str] = [
+    "本期 3 个新候选都未过门槛，淘汰 2 个、保留观察 1 个：跨市场领先-滞后 US_LeadLag 的机制被直接否定——美股信息在 A 股开盘跳空里已被定价（跌超 1% 后跳空 -0.48%，t=-9.4），"
+    "开盘之后是轻微回吐而非延续，扣费后相对同口径持有 -8.6%/年、7 年全负；波动风险溢价择时 VRP_Timing 方向与理论一致但 t=1.0，换已实现波动窗口或改周度调仓后 Sharpe 掉到 0.00 / 0.16；"
+    "股东户数集中 Stock_HolderConc 与现有规则几乎不相关（超额相关 0.03–0.21）、IC 样本内外同号，但 IC t=1.06、超额集中在 2023–2025 年，全样本只比等权多 0.5%/年，保留观察。",
+    "复现：上一版（10-23）脚本在 LAST_BAR=2026-10-22 上重跑，16 个序列中 14 个的 Sharpe、CAGR、最大回撤、样本外 Sharpe 与上一版报告逐一相同；"
+    "Stock_ResMom（0.81/18.0%/-33.1%/0.79 → 0.80/17.6%/-33.7%/0.83）与 Stock_MomLowVol（CAGR 16.0% → 16.1%）有小幅变化，原因是新浪已按中国神华 2026-10-26 除息把其前复权历史整体缩放（10-22 前复权收盘 48.97 vs 原始 49.94），"
+    "取整到分后改变了排名型规则的个别换股。",
+    "相对 10-23 期：新增 2026-10-23 一根日线（沪深300 +1.7%、创业板指 +4.2%、中证1000 +2.4%），行业 ETF 站上 MA60 的比例仍为 7%，状态仍为 bear；"
+    "观察名单排序：RiskParity_SBG、Stock_HolderConc（新）、Stock_MomLowVol、Stock_ResMom、Stock_DivYield。",
 ]
-SELF_CHECK_INTERP: List[str] = []
-OVERLAP_NOTE = ""
+RISK_INTERP: List[str] = [
+    "- Stock_HolderConc 的超额是「块状」的：2020–2022 连续三年落后等权约 11 个百分点/年，2023–2025 连续三年领先，2026 年至今再度落后 12.2 个百分点。"
+    "如果 2023–2025 只是某种风格（如中特估/央企重估）恰好与户数下降重合，这个信号会随风格一起消失。失效条件：2027 年中报户数披露后，滚动 12 个月相对等权仍为负。",
+    "- 股东户数数据：东方财富的公告日期是唯一的时点依据；部分记录来自互动平台、公告日可能晚于真实可得时间（保守）或早于（前视）。中国移动上市初期有户数为 1 的记录（增减比例 4275 万%），"
+    "只会让它排在最后、且当时不满足 120 日历史门槛，不影响选股，但说明该接口需要逐条清洗后才能实盘。",
+    "- 风格集中：Stock_DivYield、Stock_LowVol、Stock_MomLowVol、Sector_LowVol 当前持仓都偏向银行、红利、家电、电力，超额相关 0.66–0.78。"
+    "一旦风格反转会一起跑输（Stock_DivYield 2020 年落后等权 70 个百分点）。Stock_HolderConc 与这一簇相关 0.03–0.21，是目前观察名单里唯一能分散这一风险的个股规则。",
+    "- 价格源噪声：新浪前复权在每次除息后整体缩放并取整到分（本期复现中由中国神华 10-26 除息触发），排名型个股规则（尤其残差动量）会因此换股；实盘若用另一家行情源，持仓会与回测不同。",
+    "- 外部冲击：美股前一日跌超 1% 的交易日 A 股开盘平均低开 0.48%。这是开盘定价，不是可交易的延续；不要用美股隔夜涨跌做 A 股日内择时（本期 US_LeadLag 全部档位为负）。",
+]
+SELF_CHECK_INTERP: List[str] = [
+    "- Edge 还是拟合：3 个新候选的规则、参数、敏感度档位、安慰剂和机制诊断在跑数前写入代码并提交（commit 1d3ef1f5 早于本次结果）；首跑后没有改任何规则或参数。"
+    "首跑前因 Sina 分红接口 TLS 握手挂起，给 requests 加了 60 秒默认超时与分红下载重试，只影响数据下载，不影响规则。首跑后新增的只有本节与各节的解读文字。",
+    "- 非预注册的显眼结果：Holder_n8（Sharpe 1.05）、VRP_rv20_med500（0.70）、US 反向规则（机制表 +0.14%/段）都是看完历史后才知道的，不升级为候选；US 反向规则按机制表算术扣费后约为零。",
+    "- 会改变结论的证据：Stock_HolderConc 在 2026 年三季报与 2027 年中报两轮户数披露后的超额转正且 IC t 值升到 2 以上；VRP_Timing 在用 300ETF 期权 QVIX、与 510300 匹配的已实现波动重建后，"
+    "周度与月度版本结论一致。",
+    "- 跨期规律：10-22 Stock_EarnMom、10-23 Stock_DivMonth / Stock_Value、本期 Stock_HolderConc / VRP_Timing 都出现「超额集中在 2–3 个相邻年份」的模式；这个 24 只大盘股池上，年份块状超额是常态，任何新规则都要先看逐年超额。",
+]
+OVERLAP_NOTE = (
+    "解读：Stock_HolderConc 与低波动三兄弟（LowVol / MomLowVol / DivYield）超额相关 0.03 ~ 0.21、与残差动量 -0.11，持仓与 Stock_LowVol 重合 19%，是本期唯一与现有观察名单都低相关的个股规则。"
+    "低波动三兄弟之间仍是 0.66 ~ 0.78 的同一簇。"
+)
 FUNDAMENTAL_NOTES: List[str] = [
     "- 股息率实现沿用 10-21 期的同档去重修正（窗口内比最新一笔早 330 天以上的分红剔除）。",
     "- 东方财富 PB 按报告期回填（10-23 期发现，净资产在季末日跳变）；本期没有任何规则使用 PB 或 PE。",
+    "- 股东户数时点抽查（2019-06 以来 953 条记录）：公告日减截止日的中位数 29 天，10%/90% 分位 6 / 88 天；公告日早于或等于截止日的 4 条全部是中国海油、中国移动上市初期的占位记录（户数 1 或上期 0），"
+    "其中中国移动 2022-01-05 记录的增减比例为 4275 万%，只会让它排在最后，且当时不满足 120 日历史门槛，没有进入任何持仓；没有删改记录。",
+    "- 股东户数缺口：东方财富接口对紫金矿业(601899) 返回空数据（重试后仍为空），Stock_HolderConc 实际在 23 只里选股，紫金矿业永远不会入选；"
+    "EW_Stocks 基准仍包含紫金矿业，紫金矿业 2023、2025 年明显强于池子（新浪前复权 +21%、+132%，池子均值 +6%、+28%），2024 年弱于池子（+23% vs +32%），因此对该规则 2023–2025 年的相对比较略偏不利；没有用其他来源补数。",
 ]
-REPRO_NOTE = ""
-REPRO_SELF_CHECK = ""
+REPRO_NOTE = (
+    "- 先用上一版（10-23）原始脚本、LAST_BAR=2026-10-22 在独立目录重跑（独立缓存）：16 个序列中 14 个的 Sharpe、CAGR、最大回撤、样本外 Sharpe 与上一版报告逐一相同；"
+    "Stock_ResMom 与 Stock_MomLowVol 小幅变化，原因是新浪已按中国神华 2026-10-26 除息把前复权历史整体缩放（取整到分后改变个别换股），见第 1 节。"
+)
+REPRO_SELF_CHECK = (
+    "- 复现性：上一版（10-23）脚本在 LAST_BAR=2026-10-22 上重跑，14/16 个序列与上一版报告一致，其余 2 个的差异来自新浪前复权的除息缩放；本期数据只多了 2026-10-23 一根日线。"
+)
 
 INDEXES: Dict[str, str] = {
     "sh000001": "上证指数",
@@ -425,7 +493,15 @@ def fetch_stock_dividends(code: str) -> pd.DataFrame:
     else:
         import akshare as ak
 
-        raw = ak.stock_history_dividend_detail(symbol=code, indicator="分红")
+        raw = None
+        for attempt in range(3):
+            try:
+                raw = ak.stock_history_dividend_detail(symbol=code, indicator="分红")
+                break
+            except Exception:  # noqa: BLE001
+                if attempt == 2:
+                    raise
+                time.sleep(1.5 * (attempt + 1))
         raw = raw[raw["进度"].astype(str).str.contains("实施")]
         df = pd.DataFrame(
             {
@@ -1413,7 +1489,7 @@ def build_report(ctx: dict) -> str:
     a("2. 全样本 Sharpe-rf（扣 3M Shibor）> 1.0。")
     a("3. 全样本最大回撤浅于 30%。")
     a("4. 样本外夏普 > 0.5，且不是只在单一窗口有效。")
-    a("5. 跑赢自身宇宙基准（行业 ETF 策略对 EW_Sectors，个股策略对 EW_Stocks，风险平价对 EW_SBG）。")
+    a("5. 跑赢自身宇宙基准（行业 ETF 策略对 EW_Sectors，个股策略对 EW_Stocks，风险平价对 EW_SBG，US_LeadLag 对同口径 BH_CSI300_O2O，VRP_Timing 对股债 50/50 EW_SB）。")
     a("6. 经济逻辑清楚，流动性与成本下可执行，不过度依赖单一参数或单一标的（第 6 条为定性判断，见敏感度与成本翻倍表）。")
     a("")
     a(ctx["ranking_section"])
@@ -2223,7 +2299,7 @@ def run() -> None:
         ],
     )
 
-    benchmarks = {"BH_CSI300", "EW_Stocks", "EW_Sectors", "EW_SBG", "BH_Bond10Y"}
+    benchmarks = {"BH_CSI300", "EW_Stocks", "EW_Sectors", "EW_SBG", "BH_Bond10Y", "BH_CSI300_O2O", "EW_SB"}
     qual_lines = []
     survivors = []
     for n in order:
@@ -2548,8 +2624,8 @@ def run() -> None:
 
     self_check = "\n".join(
         [
-            "- 缺了什么：行业资金流、北向净买入明细、期权持仓与隐含波动率、一致预期修正、时点正确的净资产序列、货币基金 2020 年起的完整收益序列。这些缺失被记为缺口，没有用估计值填上。",
-            "- 假设里较弱的一环：现金收益为 0、成本为常数 bps、ETF 收盘可成交、股票池有幸存者偏差、部分 ETF 分红缺失、调仓之间的权重漂移未计费、分红月事件依赖新浪「实施」记录的公告日。",
+            "- 缺了什么：行业资金流、北向净买入明细、期权持仓与官方隐含波动率（本期只用了第三方 50ETF QVIX）、一致预期修正、时点正确的净资产序列、货币基金 2020 年起的完整收益序列、紫金矿业的股东户数。这些缺失被记为缺口，没有用估计值填上。",
+            "- 假设里较弱的一环：现金收益为 0、成本为常数 bps、ETF 收盘可成交、股票池有幸存者偏差、部分 ETF 分红缺失、调仓之间的权重漂移未计费、股东户数依赖东方财富记录的公告日、US_LeadLag 按开盘价成交且不计开盘冲击。",
             REPRO_SELF_CHECK,
             "- 制度覆盖：2020Q1、2022 熊市、2024 年 9 月以来的上涨、2026 年初至最近收盘都单独列了收益。样本内止于 2023，样本外从 2024 起。",
             *SELF_CHECK_INTERP,
@@ -2579,7 +2655,7 @@ def run() -> None:
     )
     gap_lines.append(
         f"- 美股：标普500 日线来自新浪 `index_us_stock_sina(.INX)`，最后一个用到的美国交易日 {spx.index.max().date()}（美国日期 < A 股日期才可用）。"
-        "A 股长假期间美股连续交易，规则只读取假期前最后一个美股交易日之后的「最近一个」交易日，不累计假期内多日涨跌。"
+        "A 股长假期间美股连续交易，规则只读取 t 之前最近一个美股交易日，不累计假期内多日涨跌。"
     )
     gap_lines.append(
         f"- 期权隐含波动：50ETF 期权 QVIX 来自 AkShare `index_option_50etf_qvix`，最后有效值 {qvix.index.max().date()}；缺失日最多向前沿用 5 个交易日。"
