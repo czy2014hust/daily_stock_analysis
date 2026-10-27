@@ -160,12 +160,66 @@ SSE_STOCKS: List[str] = [c for c in STOCKS if c.startswith("6")]
 
 # Interpretation written after reading this run's tables. It explains results; it never
 # feeds back into rules, parameters or the pass/fail checks.
-ELIMINATED: List[str] = []
-INTERP_NOTES: Dict[str, str] = {}
-EXEC_INTERP: List[str] = []
-RISK_INTERP: List[str] = []
-SELF_CHECK_INTERP: List[str] = []
-OVERLAP_NOTE = ""
+ELIMINATED: List[str] = ["Margin_Timing", "TermSpread_Timing"]
+INTERP_NOTES: Dict[str, str] = {
+    "Margin_Timing": (
+        "解读：预设方向（融资净增 → 股票占优）被机制表否定。融资 20 日净增时持有期「股票−国债」年化 -6.9%，净减时 +6.3%（t=±0.60），方向与预设相反；"
+        "反向安慰剂 Sharpe 0.54 反而高于主规格 -0.01，10/20/60 日窗口全部 ≤ 0。融资变化与 20 日价格动量的月末相关 0.50，二者分歧时最差的一格是「融资增加、价格下跌」"
+        "（占 19% 交易日，股票−国债年化 -35.3%，t=-2.31）——融资盘逆势抄底之后股票继续跑输。这是看完数据后才发现的分格，不是预注册规则，不升级为候选；"
+        "如要检验，需要下一期把「融资逆势加杠杆 → 持债」写成新规则并预注册。结论：淘汰。"
+    ),
+    "TermSpread_Timing": (
+        "解读：没有信号。利差高于中位数时「股票−国债」年化 -3.2%、低于时 +3.6%（t 值 -0.27 / 0.38），样本内两种状态都为负；"
+        "利差高时国债年化 5.1% 高于利差低时的 2.7%，说明陡峭曲线兑现的是久期 carry，而不是股票的增长预期。反向安慰剂 0.51、只用 10Y 水平 0.63 都高于主规格 0.12，"
+        "但都没到门槛，也不是预注册规格。2020–2026 年中国利率单边下行、利差窄幅波动（当前 39.5bp），这个样本里期限利差的变化主要反映政策利率节奏而非增长预期。结论：淘汰。"
+    ),
+    "Stock_MarginCrowd": (
+        "解读：组合指标是本期最好的一个（Sharpe 1.09、回撤 -19.5%、样本外 1.34、相对 EW_SSE +4.2%/年、成本翻倍后 Sharpe-rf 0.91），但预设机制不成立，不能把超额记为「杠杆拥挤」edge。"
+        "证据：(1) 秩 IC 为负（月均 -0.020，t=-0.65；样本内 -0.024、样本外 -0.013），即在全部 17 只里融资增幅越大、下月收益并不越差；"
+        "(2) 事后分桶（非预注册，脚本 `posthoc_margin_crowd.py`，月度简单收益、未扣费）呈 U 形：增幅最小 5 只年化 23.8%、中间 7.3%、增幅最大 5 只 19.1%，"
+        "最小 5 只 − 最大 5 只 t=0.57，所以「最拥挤的跑输」并没有发生；(3) 工业富联有 34 个月在最小 5 只里，贡献了最小 5 只相对等权累计超额（0.49）中的 0.33，"
+        "约三分之二；逐只剔除时去掉工业富联，超额变为 -1.0%/年；(4) 逐年超额 4/7 为正，2025 年一年 +25.9 个百分点。"
+        "Sharpe-rf 0.98 也差一点未过 1.0 门槛。结论：未过门槛，保留为低优先级观察，不升级；可证伪的下一步是拿到深交所个股融资数据后在 24 只全池重跑"
+        "（7 只深市股票等于一次新的样本外检验），若全池版本相对等权超额 ≤ 0 或 IC 仍为负则淘汰。"
+    ),
+    "Stock_HolderConc": (
+        "沿用 10-26 结论：与其他个股规则超额相关 -0.11 ~ 0.21、持仓与 Stock_LowVol 重合 19%，但超额是块状的（2020–2022 每年落后等权约 11 个百分点，2023–2025 每年领先 17–24 个百分点，"
+        "2026 年至今 -11.7 个百分点），全样本只多 0.6%/年；IC t=1.06。三季报户数在 10 月底集中披露，下一期起会进入信号。"
+    ),
+}
+EXEC_INTERP: List[str] = [
+    "本期 3 个新候选都未过门槛，淘汰 2 个、保留低优先级观察 1 个：融资余额择时 Margin_Timing 方向被否定（融资净增月份股票−国债年化 -6.9%，反向安慰剂 Sharpe 0.54 高于主规格 -0.01）；"
+    "期限利差择时 TermSpread_Timing 两种状态的股票−国债差 t 值只有 -0.27 / 0.38，利差高时赚的是国债 carry；"
+    "个股融资拥挤 Stock_MarginCrowd 组合指标最好（Sharpe 1.09、回撤 -19.5%、相对上交所等权 +4.2%/年），但秩 IC 为负（t=-0.65）、分桶呈 U 形（最拥挤 5 只也跑赢中间组），"
+    "约三分之二超额来自工业富联，Sharpe-rf 0.98 未过门槛，不升级。",
+    "复现：上一版（10-26）脚本在 LAST_BAR=2026-10-23 上重跑，16 个序列的 Sharpe、CAGR、最大回撤、样本外 Sharpe 与上一版报告逐一相同。",
+    "相对 10-26 期：新增 2026-10-26 一根日线（沪深300 -0.0%、创业板指 -1.7%、中证1000 -1.5%），行业 ETF 站上 MA60 的比例从 7% 升到 20%（银行、医药、消费重回 MA60 之上），"
+    "沪深300ETF 120 日收益仍为 -12.6%，状态仍为 bear。两市融资余额 2.389 万亿元，信号口径 20 日下降 7.95%，杠杆资金在持续去化（事实；本期融资择时规则已淘汰，不据此择时）。"
+    "观察名单排序：RiskParity_SBG、Stock_MarginCrowd（新，低优先级）、Stock_HolderConc、Stock_MomLowVol、Stock_ResMom。",
+]
+RISK_INTERP: List[str] = [
+    "- Stock_MarginCrowd 的超额依赖单一名字：工业富联贡献约三分之二的累计超额，去掉它超额转负（-1.0%/年）；2025 年一年 +25.9 个百分点。"
+    "它只在 17 只上交所股票里选，深市 7 只的缺口是数据限制而非设计，实盘口径与回测口径不同。失效条件：全池（含深市）重跑后相对等权超额 ≤ 0，或滚动 12 个月相对 EW_SSE 持续为负。",
+    "- 融资余额：两市融资余额 20 日下降约 8%，处在去杠杆阶段。本期机制表显示「融资逆势增加、价格下跌」的月份股票明显跑输（t=-2.31），但这是事后分格，"
+    "不是已验证规则，不要据此做择时。",
+    "- Stock_HolderConc 的超额是块状的：2020–2022 连续三年落后等权约 11 个百分点/年，2023–2025 连续三年领先，2026 年至今再度落后 11.7 个百分点。失效条件：2027 年中报户数披露后，滚动 12 个月相对等权仍为负。",
+    "- 风格集中：Stock_DivYield、Stock_LowVol、Stock_MomLowVol、Sector_LowVol 当前持仓都偏向银行、红利、家电、电力，超额相关 0.66–0.78；Stock_MarginCrowd 与这一簇相关 0.24–0.29，"
+    "Stock_HolderConc 0.03–0.21，是观察名单里能部分分散这一风险的两条。",
+    "- 价格源噪声：新浪前复权在每次除息后整体缩放并取整到分，排名型个股规则（尤其残差动量）会因此换股；实盘若用另一家行情源，持仓会与回测不同。",
+]
+SELF_CHECK_INTERP: List[str] = [
+    "- Edge 还是拟合：3 个新候选的规则、参数、敏感度档位、安慰剂和机制诊断在跑数前写入代码并提交（commit f02bfb13 早于本次结果）；首跑后没有改任何规则或参数。"
+    "首跑因新写的两市融资下载函数把日期列名留成「日期」而中止（同时写坏了一份缓存），修正列名并删除该缓存后重跑；只影响数据读取，不影响规则。",
+    "- 非预注册的显眼结果：Margin_inverse（Sharpe 0.54）、Y10_level_med250（0.63）、Slope_inverse（0.51）、「融资逆势增加 → 股票跑输」分格（t=-2.31）都是看完数据后才知道的，不升级；"
+    "Stock_MarginCrowd 的 U 形分桶与工业富联贡献是事后诊断（`posthoc_margin_crowd.py`），只用于解释，不改规则。",
+    "- 会改变结论的证据：Stock_MarginCrowd 在含深市的 24 只全池上重跑后 IC 转正、相对等权超额仍 > 0 且不依赖单一名字；Stock_HolderConc 在三季报与 2027 年中报两轮户数披露后超额转正且 IC t 值升到 2 以上。",
+    "- 跨期规律：10-22 Stock_EarnMom、10-23 Stock_DivMonth / Stock_Value、10-26 Stock_HolderConc / VRP_Timing、本期 Stock_MarginCrowd 都出现「超额集中在少数年份或少数名字」的模式；"
+    "在 24 只大盘股池上，组合 Sharpe 好看但 IC 不显著的规则，应默认是选股噪声而不是 edge。",
+]
+OVERLAP_NOTE = (
+    "解读：Stock_MarginCrowd 与低波动三兄弟超额相关 0.24 ~ 0.29、与残差动量 -0.07、与股东户数 0.10，持仓与 Stock_LowVol 重合 27%，不是低波动换名字；"
+    "低波动三兄弟之间仍是 0.66 ~ 0.78 的同一簇。注意本表的超额以 EW_Stocks 为基准，而 Stock_MarginCrowd 的门槛对照是 EW_SSE。"
+)
 FUNDAMENTAL_NOTES: List[str] = [
     "- 股息率实现沿用 10-21 期的同档去重修正（窗口内比最新一笔早 330 天以上的分红剔除）。",
     "- 东方财富 PB 按报告期回填（10-23 期发现，净资产在季末日跳变）；本期没有任何规则使用 PB 或 PE。",
@@ -502,7 +556,8 @@ def fetch_market_margin() -> pd.DataFrame:
         df = pd.DataFrame(parts).sort_index()
         df = df[~df.index.duplicated(keep="last")]
         df["total"] = df["sh"] + df["sz"]
-        cached = df.reset_index().rename(columns={"index": "date"})
+        df.index.name = "date"
+        cached = df.reset_index()
         _save_cache(key, cached)
     df = cached.set_index("date").sort_index()
     return df.loc[df.index <= LAST_BAR]
