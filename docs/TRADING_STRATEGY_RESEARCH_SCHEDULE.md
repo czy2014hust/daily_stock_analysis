@@ -1,15 +1,15 @@
 # 每日交易策略研究（Cursor Skill → 飞书）
 
-每个 **工作日北京时间 08:00**（周一至周五）自动调用 Cursor Cloud Agents API，执行仓库内 skill  
+手动运行，或由飞书 `repository_dispatch` 触发，调用 Cursor Cloud Agents API，执行仓库内 skill  
 `.cursor/skills/trading-strategy-research/`（`/trading-strategy-research`），  
 并把结果摘要推送到你已配置的飞书群。
 
-> cron 按周一至周五调度，不含中国法定节假日调休判断；节假日若仍触发可手动忽略或取消该次 Actions。
+工作日北京时间 08:00 的 GitHub Actions 定时已关闭（workflow 不再包含 `schedule`）。若 Cursor 控制台里另有同名 Automation，需要在 [cursor.com/automations](https://cursor.com/automations) 单独停用，仓库改动不会关掉它。
 
 ## 架构
 
 ```text
-GitHub Actions cron (00:00 UTC Mon–Fri = 08:00 Asia/Shanghai weekdays)
+GitHub Actions（手动 Run workflow，或飞书 repository_dispatch）
         │
         ▼
 scripts/trigger_trading_strategy_research.py
@@ -80,7 +80,7 @@ Workflow 文件：`.github/workflows/daily-trading-strategy-research.yml`
 
 ### GitHub Actions（推荐）
 
-- 定时：每个工作日 08:00（北京时间，周一至周五）自动跑
+- 定时：已关闭
 - 手动：Actions → **每日交易策略研究 (Cursor Skill)** → Run workflow  
   - 可勾选「跳过飞书」  
   - 可填写额外研究焦点
@@ -104,22 +104,11 @@ python scripts/trigger_trading_strategy_research.py --feishu-test
 
 GitHub Actions 手动运行时也可勾选 **仅测试飞书连通性**。
 
-## Cursor Automations UI（备选）
+## Cursor Automations UI（备选，默认不要开）
 
-若你更想用 Cursor 控制台而不是 GitHub Actions：
+仓库侧的 GitHub Actions 定时已关闭。若你曾在 Cursor 控制台建过同名 Scheduled Automation，请到 [cursor.com/automations](https://cursor.com/automations) 停用或删除，否则仍会每天启动 Cloud Agent。
 
-1. 打开 [cursor.com/automations](https://cursor.com/automations)
-2. 新建 Automation，Trigger 选 **Scheduled**，cron：`0 0 * * 1-5`（UTC，周一至周五）或按 UI 时区选工作日 08:00
-3. Repository 选本仓库 `main`
-4. Prompt 可直接使用：
-
-```text
-Follow `.cursor/skills/trading-strategy-research/SKILL.md`.
-Produce today's ranked strategy research report, save Markdown under reports/,
-and keep the final reply as a concise Chinese summary for Feishu.
-```
-
-5. 飞书：Automations 目前没有原生飞书工具；请在 prompt 中让 Agent 调用 webhook，或继续用本仓库的 GitHub Actions 脚本负责推送（推荐后者，复用已有飞书 Secret）。
+一般不要新建定时 Automation。需要时优先用 Actions 手动 Run workflow，或飞书 `repository_dispatch`。
 
 ## 输出与排障
 
