@@ -1,13 +1,13 @@
 # 每日交易策略研究（Cursor Skill → 飞书）
 
-每天 **北京时间 09:00** 自动调用 Cursor Cloud Agents API，执行仓库内 skill  
+手动运行，或由飞书 `repository_dispatch` 触发，调用 Cursor Cloud Agents API，执行仓库内 skill  
 `.cursor/skills/trading-strategy-research/`（`/trading-strategy-research`），  
 并把结果摘要推送到你已配置的飞书群。
 
 ## 架构
 
 ```text
-GitHub Actions cron (01:00 UTC = 09:00 Asia/Shanghai)
+GitHub Actions（手动 Run workflow，或飞书 repository_dispatch）
         │
         ▼
 scripts/trigger_trading_strategy_research.py
@@ -78,7 +78,7 @@ Workflow 文件：`.github/workflows/daily-trading-strategy-research.yml`
 
 ### GitHub Actions（推荐）
 
-- 定时：每天 09:00（北京时间）自动跑
+- 定时：已关闭
 - 手动：Actions → **每日交易策略研究 (Cursor Skill)** → Run workflow  
   - 可勾选「跳过飞书」  
   - 可填写额外研究焦点
