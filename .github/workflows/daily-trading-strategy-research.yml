@@ -1,9 +1,7 @@
 name: 每日交易策略研究 (Cursor Skill)
 
 on:
-  # 每天北京时间 09:00（UTC 01:00）
-  schedule:
-    - cron: '0 1 * * *'
+  # 定时已关闭。需要时用手动 Run workflow，或飞书 repository_dispatch。
   workflow_dispatch:
     inputs:
       feishu_test_only:
