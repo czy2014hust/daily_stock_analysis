@@ -58,7 +58,9 @@ env/
 /.llm_usage_hmac_secret
 **/.llm_usage_hmac_secret
 logs/
-reports/
+# Runtime analysis output. Checked-in strategy-research notes are the exception.
+reports/*
+!reports/trading_strategy_research_*.md
 *.db
 *.sqlite
 *.sqlite3
